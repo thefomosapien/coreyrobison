@@ -30,7 +30,7 @@ export default function ProjectCard({ project }: ProjectCardProps) {
             {project.description}
           </p>
           <div className="flex flex-wrap gap-2 mb-6">
-            {project.skills.map((skill) => (
+            {(project.skills || []).map((skill) => (
               <span
                 key={skill}
                 className="text-[0.7rem] font-medium tracking-wide px-3 py-1 rounded-full bg-bg-alt text-ink-light"
@@ -46,7 +46,7 @@ export default function ProjectCard({ project }: ProjectCardProps) {
               rel="noopener noreferrer"
               className="inline-flex items-center gap-1.5 text-[0.85rem] font-medium text-accent transition-all duration-300 hover:gap-3 group/link"
             >
-              Visit {new URL(project.external_url).hostname.replace('www.', '')}
+              Visit {(() => { try { return new URL(project.external_url!).hostname.replace('www.', ''); } catch { return 'site'; } })()}
               <span className="transition-transform duration-300 group-hover/link:translate-x-0.5">→</span>
             </a>
           )}

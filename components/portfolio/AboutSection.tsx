@@ -29,7 +29,7 @@ export default function AboutSection({ settings, details }: AboutSectionProps) {
               <h3 className="font-serif text-3xl mb-6 tracking-tight" style={{ letterSpacing: '-0.02em' }}>
                 {settings.about_headline}
               </h3>
-              {settings.about_paragraphs.map((paragraph, i) => (
+              {(settings.about_paragraphs || []).map((paragraph, i) => (
                 <p key={i} className="text-ink-light text-[0.95rem] mb-5" style={{ lineHeight: '1.8' }}>
                   {paragraph}
                 </p>
