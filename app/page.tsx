@@ -11,13 +11,13 @@ import type { SiteSettings, Project, JourneyItem, AboutDetail, ContactLink } fro
 export const revalidate = 60;
 
 async function getData() {
-  const supabase = createServerSupabaseClient();
-
-  if (!supabase) {
-    return { settings: null, projects: [], journeyItems: [], aboutDetails: [], contactLinks: [] };
-  }
-
   try {
+    const supabase = createServerSupabaseClient();
+
+    if (!supabase) {
+      return { settings: null, projects: [], journeyItems: [], aboutDetails: [], contactLinks: [] };
+    }
+
     const [settingsRes, projectsRes, journeyRes, aboutRes, contactRes] = await Promise.all([
       supabase.from('site_settings').select('*').single(),
       supabase.from('projects').select('*').eq('is_visible', true).order('sort_order'),
