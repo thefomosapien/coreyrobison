@@ -13,21 +13,29 @@ export const revalidate = 60;
 async function getData() {
   const supabase = createServerSupabaseClient();
 
-  const [settingsRes, projectsRes, journeyRes, aboutRes, contactRes] = await Promise.all([
-    supabase.from('site_settings').select('*').single(),
-    supabase.from('projects').select('*').eq('is_visible', true).order('sort_order'),
-    supabase.from('journey_items').select('*').eq('is_visible', true).order('sort_order'),
-    supabase.from('about_details').select('*').order('sort_order'),
-    supabase.from('contact_links').select('*').order('sort_order'),
-  ]);
+  if (!supabase) {
+    return { settings: null, projects: [], journeyItems: [], aboutDetails: [], contactLinks: [] };
+  }
 
-  return {
-    settings: settingsRes.data as SiteSettings,
-    projects: (projectsRes.data || []) as Project[],
-    journeyItems: (journeyRes.data || []) as JourneyItem[],
-    aboutDetails: (aboutRes.data || []) as AboutDetail[],
-    contactLinks: (contactRes.data || []) as ContactLink[],
-  };
+  try {
+    const [settingsRes, projectsRes, journeyRes, aboutRes, contactRes] = await Promise.all([
+      supabase.from('site_settings').select('*').single(),
+      supabase.from('projects').select('*').eq('is_visible', true).order('sort_order'),
+      supabase.from('journey_items').select('*').eq('is_visible', true).order('sort_order'),
+      supabase.from('about_details').select('*').order('sort_order'),
+      supabase.from('contact_links').select('*').order('sort_order'),
+    ]);
+
+    return {
+      settings: settingsRes.data as SiteSettings,
+      projects: (projectsRes.data || []) as Project[],
+      journeyItems: (journeyRes.data || []) as JourneyItem[],
+      aboutDetails: (aboutRes.data || []) as AboutDetail[],
+      contactLinks: (contactRes.data || []) as ContactLink[],
+    };
+  } catch {
+    return { settings: null, projects: [], journeyItems: [], aboutDetails: [], contactLinks: [] };
+  }
 }
 
 export default async function Home() {
