@@ -1,4 +1,4 @@
-import { createServerSupabaseClient } from '@/lib/supabase/server';
+import { createClient } from '@supabase/supabase-js';
 import Nav from '@/components/portfolio/Nav';
 import Hero from '@/components/portfolio/Hero';
 import ProjectCard from '@/components/portfolio/ProjectCard';
@@ -12,11 +12,14 @@ export const revalidate = 60;
 
 async function getData() {
   try {
-    const supabase = createServerSupabaseClient();
+    const url = process.env.NEXT_PUBLIC_SUPABASE_URL;
+    const key = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
 
-    if (!supabase) {
+    if (!url || !key) {
       return { settings: null, projects: [], journeyItems: [], aboutDetails: [], contactLinks: [] };
     }
+
+    const supabase = createClient(url, key);
 
     const [settingsRes, projectsRes, journeyRes, aboutRes, contactRes] = await Promise.all([
       supabase.from('site_settings').select('*').single(),
@@ -27,7 +30,7 @@ async function getData() {
     ]);
 
     return {
-      settings: settingsRes.data as SiteSettings,
+      settings: settingsRes.data as SiteSettings | null,
       projects: (projectsRes.data || []) as Project[],
       journeyItems: (journeyRes.data || []) as JourneyItem[],
       aboutDetails: (aboutRes.data || []) as AboutDetail[],
