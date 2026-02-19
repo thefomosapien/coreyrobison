@@ -7,7 +7,7 @@ interface JourneyTimelineProps {
 
 export default function JourneyTimeline({ items }: JourneyTimelineProps) {
   return (
-    <section id="journey" className="max-w-content mx-auto px-8 max-sm:px-5">
+    <section id="journey" className="max-w-content mx-auto px-8 max-[900px]:px-5">
       <ScrollReveal>
         <div className="pt-32 pb-12 border-t border-ink/10">
           <div className="text-[0.75rem] font-medium tracking-[0.14em] uppercase text-ink-muted mb-4">

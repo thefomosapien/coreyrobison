@@ -35,7 +35,7 @@ export default function Nav({ name }: NavProps) {
   return (
     <>
       <nav
-        className="fixed top-0 left-0 right-0 z-[100] px-8 max-sm:px-5 py-5 flex justify-between items-center transition-all duration-400"
+        className="fixed top-0 left-0 right-0 z-[100] px-8 max-[900px]:px-5 py-5 flex justify-between items-center transition-all duration-400"
         style={{
           background: 'rgba(246, 243, 238, 0.85)',
           backdropFilter: 'blur(12px)',
@@ -48,7 +48,7 @@ export default function Nav({ name }: NavProps) {
         </a>
 
         {/* Desktop links */}
-        <div className="hidden sm:flex gap-8 text-[0.85rem] font-medium tracking-widest uppercase">
+        <div className="flex gap-8 text-[0.85rem] font-medium tracking-widest uppercase max-[900px]:hidden">
           {navItems.map((item) => (
             <a
               key={item}
@@ -63,45 +63,43 @@ export default function Nav({ name }: NavProps) {
 
         {/* Mobile hamburger button */}
         <button
-          className="sm:hidden flex flex-col justify-center items-center w-8 h-8 gap-[5px]"
+          className="hidden max-[900px]:flex flex-col justify-center items-center w-10 h-10 gap-[6px]"
           onClick={() => setMenuOpen(!menuOpen)}
           aria-label={menuOpen ? 'Close menu' : 'Open menu'}
           aria-expanded={menuOpen}
         >
           <span
-            className="block w-5 h-[1.5px] bg-ink transition-all duration-300 origin-center"
+            className="block w-6 h-[2px] bg-ink rounded-full transition-all duration-300 origin-center"
             style={{
-              transform: menuOpen ? 'translateY(3.25px) rotate(45deg)' : 'none',
+              transform: menuOpen ? 'translateY(4px) rotate(45deg)' : 'none',
             }}
           />
           <span
-            className="block w-5 h-[1.5px] bg-ink transition-all duration-300 origin-center"
+            className="block w-6 h-[2px] bg-ink rounded-full transition-all duration-300 origin-center"
             style={{
-              transform: menuOpen ? 'translateY(-3.25px) rotate(-45deg)' : 'none',
+              transform: menuOpen ? 'translateY(-4px) rotate(-45deg)' : 'none',
             }}
           />
         </button>
       </nav>
 
       {/* Mobile menu overlay */}
-      <div
-        className="fixed inset-0 z-[99] bg-bg flex flex-col items-center justify-center gap-8 transition-all duration-300 sm:hidden"
-        style={{
-          opacity: menuOpen ? 1 : 0,
-          pointerEvents: menuOpen ? 'auto' : 'none',
-        }}
-      >
-        {navItems.map((item) => (
-          <a
-            key={item}
-            href={`#${item.toLowerCase()}`}
-            className="font-serif text-3xl tracking-tight text-ink hover:text-accent transition-colors duration-300"
-            onClick={() => setMenuOpen(false)}
-          >
-            {item}
-          </a>
-        ))}
-      </div>
+      {menuOpen && (
+        <div
+          className="fixed inset-0 z-[99] bg-bg flex-col items-center justify-center gap-8 hidden max-[900px]:flex"
+        >
+          {navItems.map((item) => (
+            <a
+              key={item}
+              href={`#${item.toLowerCase()}`}
+              className="font-serif text-3xl tracking-tight text-ink hover:text-accent transition-colors duration-300"
+              onClick={() => setMenuOpen(false)}
+            >
+              {item}
+            </a>
+          ))}
+        </div>
+      )}
     </>
   );
 }
