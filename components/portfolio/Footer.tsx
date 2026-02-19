@@ -11,7 +11,7 @@ export default function Footer({ settings, links }: FooterProps) {
 
   return (
     <footer id="contact" className="bg-ink text-white/70 py-24">
-      <div className="max-w-content mx-auto px-8 max-[900px]:px-5 flex justify-between items-start max-[900px]:flex-col max-[900px]:gap-12">
+      <div className="max-w-content mx-auto px-5 tablet:px-8 flex flex-col tablet:flex-row tablet:justify-between tablet:items-start gap-12">
         <div>
           <h2
             className="font-serif text-white mb-4 tracking-tight"
@@ -23,11 +23,11 @@ export default function Footer({ settings, links }: FooterProps) {
             {settings.contact_description}
           </p>
         </div>
-        <div className="flex flex-col gap-3 text-right max-[900px]:text-left">
+        <div className="flex flex-col gap-3 text-left tablet:text-right">
           {emailLink && (
             <a
               href={emailLink.url}
-              className="text-lg text-white font-medium relative inline-flex items-center gap-1.5 hover:text-white transition-colors max-[900px]:justify-start justify-end"
+              className="text-lg text-white font-medium relative inline-flex items-center gap-1.5 hover:text-white transition-colors justify-start tablet:justify-end"
             >
               {emailLink.label}
               <span className="absolute bottom-[-2px] left-0 w-full h-px bg-accent" />
@@ -39,15 +39,15 @@ export default function Footer({ settings, links }: FooterProps) {
               href={link.url}
               target="_blank"
               rel="noopener noreferrer"
-              className="text-[0.9rem] text-white/50 hover:text-white transition-colors inline-flex items-center gap-1.5 max-[900px]:justify-start justify-end"
+              className="text-[0.9rem] text-white/50 hover:text-white transition-colors inline-flex items-center gap-1.5 justify-start tablet:justify-end"
             >
               {link.label} ↗
             </a>
           ))}
         </div>
       </div>
-      <div className="max-w-content mx-auto px-8 max-[900px]:px-5">
-        <div className="mt-16 pt-8 border-t border-white/[0.08] text-[0.75rem] text-white/25 flex justify-between max-[900px]:flex-col max-[900px]:gap-2">
+      <div className="max-w-content mx-auto px-5 tablet:px-8">
+        <div className="mt-16 pt-8 border-t border-white/[0.08] text-[0.75rem] text-white/25 flex flex-col tablet:flex-row tablet:justify-between gap-2">
           <span>© {new Date().getFullYear()} {settings.name}</span>
           <span>Designed with care in Salt Lake City</span>
         </div>

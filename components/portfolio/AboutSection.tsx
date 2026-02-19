@@ -8,7 +8,7 @@ interface AboutSectionProps {
 
 export default function AboutSection({ settings, details }: AboutSectionProps) {
   return (
-    <section id="about" className="max-w-content mx-auto px-8 max-[900px]:px-5">
+    <section id="about" className="max-w-content mx-auto px-5 tablet:px-8">
       <ScrollReveal>
         <div className="pt-32 pb-12 border-t border-ink/10">
           <div className="text-[0.75rem] font-medium tracking-[0.14em] uppercase text-ink-muted mb-4">
@@ -24,7 +24,7 @@ export default function AboutSection({ settings, details }: AboutSectionProps) {
       </ScrollReveal>
       <div className="py-24 pb-32">
         <ScrollReveal>
-          <div className="grid grid-cols-2 gap-16 max-[900px]:grid-cols-1 max-[900px]:gap-12">
+          <div className="grid grid-cols-1 tablet:grid-cols-2 gap-12 tablet:gap-16">
             <div>
               <h3 className="font-serif text-3xl mb-6 tracking-tight" style={{ letterSpacing: '-0.02em' }}>
                 {settings.about_headline}

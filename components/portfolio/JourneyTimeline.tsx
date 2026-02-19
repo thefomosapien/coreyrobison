@@ -7,7 +7,7 @@ interface JourneyTimelineProps {
 
 export default function JourneyTimeline({ items }: JourneyTimelineProps) {
   return (
-    <section id="journey" className="max-w-content mx-auto px-8 max-[900px]:px-5">
+    <section id="journey" className="max-w-content mx-auto px-5 tablet:px-8">
       <ScrollReveal>
         <div className="pt-32 pb-12 border-t border-ink/10">
           <div className="text-[0.75rem] font-medium tracking-[0.14em] uppercase text-ink-muted mb-4">
@@ -23,7 +23,7 @@ export default function JourneyTimeline({ items }: JourneyTimelineProps) {
       </ScrollReveal>
       <ScrollReveal>
         <div className="py-24">
-          <div className="grid max-[900px]:grid-cols-[80px_1fr] grid-cols-[120px_1fr]">
+          <div className="grid grid-cols-[80px_1fr] tablet:grid-cols-[120px_1fr]">
             {items
               .filter((item) => item.is_visible)
               .map((item) => (

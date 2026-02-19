@@ -9,7 +9,7 @@ interface ProjectCardProps {
 export default function ProjectCard({ project }: ProjectCardProps) {
   return (
     <ScrollReveal>
-      <div className="project-card grid grid-cols-2 gap-12 items-center py-16 border-b border-ink/[0.07] last:border-b-0 max-[900px]:grid-cols-1 max-[900px]:gap-8 max-[900px]:py-12 group">
+      <div className="project-card grid grid-cols-1 tablet:grid-cols-2 gap-8 tablet:gap-12 items-center py-12 tablet:py-16 border-b border-ink/[0.07] last:border-b-0 group">
         <div
           className="relative rounded-xl overflow-hidden bg-bg-alt transition-transform duration-500 group-hover:scale-[1.01]"
           style={{ aspectRatio: '4/3' }}

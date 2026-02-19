@@ -35,7 +35,7 @@ export default function Nav({ name }: NavProps) {
   return (
     <>
       <nav
-        className="fixed top-0 left-0 right-0 z-[100] px-8 max-[900px]:px-5 py-5 flex justify-between items-center transition-all duration-400"
+        className="fixed top-0 left-0 right-0 z-[100] px-5 tablet:px-8 py-5 flex justify-between items-center transition-all duration-400"
         style={{
           background: 'rgba(246, 243, 238, 0.85)',
           backdropFilter: 'blur(12px)',
@@ -47,8 +47,8 @@ export default function Nav({ name }: NavProps) {
           {name}
         </a>
 
-        {/* Desktop links */}
-        <div className="flex gap-8 text-[0.85rem] font-medium tracking-widest uppercase max-[900px]:hidden">
+        {/* Desktop links — hidden on mobile, visible at tablet (901px+) */}
+        <div className="hidden tablet:flex gap-8 text-[0.85rem] font-medium tracking-widest uppercase">
           {navItems.map((item) => (
             <a
               key={item}
@@ -61,9 +61,9 @@ export default function Nav({ name }: NavProps) {
           ))}
         </div>
 
-        {/* Mobile hamburger button */}
+        {/* Mobile hamburger — visible by default, hidden at tablet (901px+) */}
         <button
-          className="hidden max-[900px]:flex flex-col justify-center items-center w-10 h-10 gap-[6px]"
+          className="flex tablet:hidden flex-col justify-center items-center w-10 h-10 gap-[6px]"
           onClick={() => setMenuOpen(!menuOpen)}
           aria-label={menuOpen ? 'Close menu' : 'Open menu'}
           aria-expanded={menuOpen}
@@ -85,9 +85,7 @@ export default function Nav({ name }: NavProps) {
 
       {/* Mobile menu overlay */}
       {menuOpen && (
-        <div
-          className="fixed inset-0 z-[99] bg-bg flex-col items-center justify-center gap-8 hidden max-[900px]:flex"
-        >
+        <div className="fixed inset-0 z-[99] bg-bg flex flex-col items-center justify-center gap-8 tablet:hidden">
           {navItems.map((item) => (
             <a
               key={item}

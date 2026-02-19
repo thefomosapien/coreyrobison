@@ -7,7 +7,7 @@ interface HeroProps {
 export default function Hero({ settings }: HeroProps) {
   return (
     <section className="min-h-screen flex items-center pt-20">
-      <div className="max-w-content mx-auto px-8 max-[900px]:px-5 w-full">
+      <div className="max-w-content mx-auto px-5 tablet:px-8 w-full">
         <div
           className="text-[0.8rem] font-medium tracking-[0.12em] uppercase text-accent mb-6 opacity-0 animate-fade-up-delay-1"
         >
