@@ -11,7 +11,7 @@ export default function Footer({ settings, links }: FooterProps) {
 
   return (
     <footer id="contact" className="bg-ink text-white/70 py-24">
-      <div className="max-w-content mx-auto px-8 flex justify-between items-start max-[900px]:flex-col max-[900px]:gap-12">
+      <div className="max-w-content mx-auto px-8 max-sm:px-5 flex justify-between items-start max-[900px]:flex-col max-[900px]:gap-12">
         <div>
           <h2
             className="font-serif text-white mb-4 tracking-tight"
@@ -46,7 +46,7 @@ export default function Footer({ settings, links }: FooterProps) {
           ))}
         </div>
       </div>
-      <div className="max-w-content mx-auto px-8">
+      <div className="max-w-content mx-auto px-8 max-sm:px-5">
         <div className="mt-16 pt-8 border-t border-white/[0.08] text-[0.75rem] text-white/25 flex justify-between max-[900px]:flex-col max-[900px]:gap-2">
           <span>© {new Date().getFullYear()} {settings.name}</span>
           <span>Designed with care in Salt Lake City</span>

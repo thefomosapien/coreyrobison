@@ -8,7 +8,7 @@ interface AboutSectionProps {
 
 export default function AboutSection({ settings, details }: AboutSectionProps) {
   return (
-    <section id="about" className="max-w-content mx-auto px-8">
+    <section id="about" className="max-w-content mx-auto px-8 max-sm:px-5">
       <ScrollReveal>
         <div className="pt-32 pb-12 border-t border-ink/10">
           <div className="text-[0.75rem] font-medium tracking-[0.14em] uppercase text-ink-muted mb-4">
