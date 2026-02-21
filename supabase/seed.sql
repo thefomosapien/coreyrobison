@@ -36,7 +36,7 @@ INSERT INTO thoughts (slug, title, category, sort_order) VALUES
 INSERT INTO reactions (target_type, target_id, reaction_type, count)
 SELECT 'thought', t.id, r.type, r.cnt
 FROM thoughts t
-CROSS JOIN (VALUES
+JOIN (VALUES
   ('depth-over-breadth', 'thoughtful', 12),
   ('depth-over-breadth', 'relatable', 8),
   ('depth-over-breadth', 'good', 7),
