@@ -1,42 +1,47 @@
 import type { Project } from '@/lib/types';
 import ProjectVisual from './ProjectVisual';
+import PixelBadge from './PixelBadge';
+import Reactions from './Reactions';
 import ScrollReveal from './ScrollReveal';
 
 interface ProjectCardProps {
   project: Project;
+  reactions: Record<string, number>;
 }
 
-export default function ProjectCard({ project }: ProjectCardProps) {
+export default function ProjectCard({ project, reactions }: ProjectCardProps) {
   return (
     <ScrollReveal>
-      <div className="project-card grid grid-cols-1 tablet:grid-cols-2 gap-8 tablet:gap-12 items-center py-12 tablet:py-16 border-b border-ink/[0.07] last:border-b-0 group">
-        <div
-          className="relative rounded-xl overflow-hidden bg-bg-alt transition-transform duration-500 group-hover:scale-[1.01]"
-          style={{ aspectRatio: '4/3' }}
-        >
+      <article
+        role="article"
+        aria-label={project.name}
+        className="grid grid-cols-1 tablet:grid-cols-2 items-center"
+        style={{ gap: 28 }}
+      >
+        <div style={{ aspectRatio: '4/3', borderRadius: 10, overflow: 'hidden' }}>
           <ProjectVisual project={project} />
         </div>
-        <div className="py-4">
-          <div className="text-[0.7rem] font-medium tracking-[0.1em] uppercase text-accent mb-3">
-            {project.tag}
-          </div>
+        <div>
+          <PixelBadge variant="accent">{project.tag}</PixelBadge>
           <h3
-            className="font-serif leading-tight tracking-tight mb-4"
-            style={{ fontSize: 'clamp(1.6rem, 2.5vw, 2.2rem)', letterSpacing: '-0.02em' }}
+            className="font-serif font-normal"
+            style={{
+              fontSize: 21,
+              color: '#2A2824',
+              lineHeight: 1.25,
+              marginTop: 10,
+              marginBottom: 10,
+              letterSpacing: '-0.01em',
+            }}
           >
             {project.name}
           </h3>
-          <p className="text-ink-light text-[0.95rem] leading-relaxed mb-6 max-w-[42ch]" style={{ lineHeight: '1.7' }}>
+          <p style={{ fontSize: 14, lineHeight: 1.65, color: '#6B6660', marginBottom: 14, maxWidth: '44ch' }}>
             {project.description}
           </p>
-          <div className="flex flex-wrap gap-2 mb-6">
-            {(project.skills || []).map((skill) => (
-              <span
-                key={skill}
-                className="text-[0.7rem] font-medium tracking-wide px-3 py-1 rounded-full bg-bg-alt text-ink-light"
-              >
-                {skill}
-              </span>
+          <div className="flex flex-wrap gap-1.5" style={{ marginBottom: 4 }}>
+            {(project.skills || []).map((s) => (
+              <PixelBadge key={s} variant="muted">{s}</PixelBadge>
             ))}
           </div>
           {project.external_url && (
@@ -44,14 +49,15 @@ export default function ProjectCard({ project }: ProjectCardProps) {
               href={project.external_url}
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-flex items-center gap-1.5 text-[0.85rem] font-medium text-accent transition-all duration-300 hover:gap-3 group/link"
+              className="font-pixel inline-flex items-center gap-1"
+              style={{ fontSize: 10, color: '#5A8A9A', marginTop: 10 }}
             >
-              Visit {(() => { try { return new URL(project.external_url!).hostname.replace('www.', ''); } catch { return 'site'; } })()}
-              <span className="transition-transform duration-300 group-hover/link:translate-x-0.5">→</span>
+              Visit site ↗
             </a>
           )}
+          <Reactions targetType="project" targetId={project.id} initialReactions={reactions} />
         </div>
-      </div>
+      </article>
     </ScrollReveal>
   );
 }

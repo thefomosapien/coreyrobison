@@ -19,38 +19,31 @@ const config: Config = {
     extend: {
       colors: {
         bg: {
-          DEFAULT: '#F6F3EE',
-          alt: '#EDE9E1',
+          DEFAULT: '#FAF8F4',
+          alt: '#F0EDE6',
+          surface: '#F5F0E8',
         },
         ink: {
-          DEFAULT: '#1A1814',
-          light: '#6B6560',
-          muted: '#9B9590',
+          DEFAULT: '#2A2824',
+          light: '#6B6660',
+          muted: '#A09A92',
+          faint: '#B5AFA5',
+          ghost: '#C4BDB4',
         },
-        accent: {
-          DEFAULT: '#C8553D',
-          soft: '#E8A090',
+        ocean: {
+          DEFAULT: '#5A8A9A',
+          dark: '#3D6E7A',
         },
+        sand: '#C68C5A',
+        tide: '#3D6E5C',
       },
       fontFamily: {
-        serif: ['DM Serif Display', 'Georgia', 'serif'],
-        sans: ['DM Sans', '-apple-system', 'sans-serif'],
+        serif: ['Instrument Serif', 'Georgia', 'serif'],
+        sans: ['Instrument Sans', '-apple-system', 'sans-serif'],
+        pixel: ['Silkscreen', 'cursive'],
       },
       maxWidth: {
-        content: '1100px',
-      },
-      animation: {
-        'fade-up': 'fadeUp 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards',
-        'fade-up-delay-1': 'fadeUp 0.8s cubic-bezier(0.16, 1, 0.3, 1) 0.2s forwards',
-        'fade-up-delay-2': 'fadeUp 0.8s cubic-bezier(0.16, 1, 0.3, 1) 0.35s forwards',
-        'fade-up-delay-3': 'fadeUp 0.8s cubic-bezier(0.16, 1, 0.3, 1) 0.5s forwards',
-        'fade-up-delay-4': 'fadeUp 0.8s cubic-bezier(0.16, 1, 0.3, 1) 0.65s forwards',
-      },
-      keyframes: {
-        fadeUp: {
-          from: { opacity: '0', transform: 'translateY(20px)' },
-          to: { opacity: '1', transform: 'translateY(0)' },
-        },
+        content: '920px',
       },
     },
   },

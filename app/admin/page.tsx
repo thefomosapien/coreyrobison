@@ -5,6 +5,7 @@ import { createClient } from '@/lib/supabase/client';
 
 interface Counts {
   projects: number;
+  thoughts: number;
   journeyItems: number;
   aboutDetails: number;
   contactLinks: number;
@@ -17,8 +18,9 @@ export default function AdminDashboard() {
   useEffect(() => {
     async function load() {
       const supabase = createClient();
-      const [projects, journey, about, contact, settings] = await Promise.all([
+      const [projects, thoughts, journey, about, contact, settings] = await Promise.all([
         supabase.from('projects').select('id', { count: 'exact', head: true }),
+        supabase.from('thoughts').select('id', { count: 'exact', head: true }),
         supabase.from('journey_items').select('id', { count: 'exact', head: true }),
         supabase.from('about_details').select('id', { count: 'exact', head: true }),
         supabase.from('contact_links').select('id', { count: 'exact', head: true }),
@@ -26,6 +28,7 @@ export default function AdminDashboard() {
       ]);
       setCounts({
         projects: projects.count || 0,
+        thoughts: thoughts.count || 0,
         journeyItems: journey.count || 0,
         aboutDetails: about.count || 0,
         contactLinks: contact.count || 0,
@@ -38,6 +41,7 @@ export default function AdminDashboard() {
   const cards = counts
     ? [
         { label: 'Projects', count: counts.projects, href: '/admin/projects' },
+        { label: 'Thoughts', count: counts.thoughts, href: '/admin/thoughts' },
         { label: 'Journey Items', count: counts.journeyItems, href: '/admin/journey' },
         { label: 'About Details', count: counts.aboutDetails, href: '/admin/about' },
         { label: 'Contact Links', count: counts.contactLinks, href: '/admin/contact' },
@@ -66,7 +70,7 @@ export default function AdminDashboard() {
             href={card.href}
             className="bg-white rounded-xl p-5 border border-ink/[0.06] hover:border-ink/10 transition group"
           >
-            <div className="text-3xl font-serif mb-1 group-hover:text-accent transition-colors">
+            <div className="text-3xl font-serif mb-1 group-hover:text-ocean transition-colors">
               {card.count}
             </div>
             <div className="text-sm text-ink-muted">{card.label}</div>

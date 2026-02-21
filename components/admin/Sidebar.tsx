@@ -9,9 +9,11 @@ const navItems = [
   { href: '/admin', label: 'Dashboard', icon: '◉' },
   { href: '/admin/settings', label: 'Settings', icon: '⚙' },
   { href: '/admin/projects', label: 'Projects', icon: '◧' },
+  { href: '/admin/thoughts', label: 'Thoughts', icon: '💭' },
   { href: '/admin/journey', label: 'Journey', icon: '↗' },
   { href: '/admin/about', label: 'About', icon: '☻' },
   { href: '/admin/contact', label: 'Contact', icon: '✉' },
+  { href: '/admin/reactions', label: 'Reactions', icon: '♡' },
 ];
 
 export default function Sidebar() {
@@ -86,7 +88,7 @@ export default function Sidebar() {
           </Link>
           <button
             onClick={handleSignOut}
-            className="flex items-center gap-2 px-2 py-2 text-sm text-ink-muted hover:text-accent transition-colors w-full text-left"
+            className="flex items-center gap-2 px-2 py-2 text-sm text-ink-muted hover:text-ocean transition-colors w-full text-left"
           >
             ← Sign Out
           </button>

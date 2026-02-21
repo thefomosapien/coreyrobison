@@ -6,40 +6,41 @@ interface JourneyTimelineProps {
 }
 
 export default function JourneyTimeline({ items }: JourneyTimelineProps) {
+  const visible = items.filter((item) => item.is_visible);
+
   return (
-    <section id="journey" className="max-w-content mx-auto px-5 tablet:px-8">
+    <section
+      id="journey"
+      aria-label="Career journey"
+      style={{ paddingTop: 48, paddingBottom: 48, borderTop: '1px solid rgba(42,40,36,0.08)' }}
+    >
       <ScrollReveal>
-        <div className="pt-32 pb-12 border-t border-ink/10">
-          <div className="text-[0.75rem] font-medium tracking-[0.14em] uppercase text-ink-muted mb-4">
-            Journey
-          </div>
-          <h2
-            className="font-serif leading-tight tracking-tight max-w-[20ch]"
-            style={{ fontSize: 'clamp(2rem, 4vw, 3rem)', letterSpacing: '-0.02em' }}
+        <h2 className="font-serif text-[20px] font-normal" style={{ color: '#2A2824', marginBottom: 28 }}>
+          Career journey
+        </h2>
+        {visible.map((item, i) => (
+          <div
+            key={item.id}
+            className="grid grid-cols-[80px_1fr] tablet:grid-cols-[130px_1fr]"
+            style={{ paddingBottom: 20 }}
           >
-            The path that got me here.
-          </h2>
-        </div>
-      </ScrollReveal>
-      <ScrollReveal>
-        <div className="py-24">
-          <div className="grid grid-cols-[80px_1fr] tablet:grid-cols-[120px_1fr]">
-            {items
-              .filter((item) => item.is_visible)
-              .map((item) => (
-                <div key={item.id} className="contents">
-                  <div className="text-[0.8rem] font-medium text-ink-muted py-7 border-r border-ink/10 pr-8 text-right">
-                    {item.year_label}
-                  </div>
-                  <div className="py-7 pl-8 border-b border-ink/[0.05] last:border-b-0">
-                    <div className="font-serif text-lg mb-0.5">{item.role}</div>
-                    <div className="text-[0.85rem] text-ink-light mb-2">{item.company}</div>
-                    <div className="text-[0.85rem] text-ink-muted italic">{item.note}</div>
-                  </div>
-                </div>
-              ))}
+            <div className="font-pixel" style={{ fontSize: 9, color: '#B5AFA5', paddingTop: 4, paddingRight: 20 }}>
+              {item.year_label}
+            </div>
+            <div
+              style={{
+                paddingBottom: 20,
+                borderBottom: i < visible.length - 1 ? '1px solid rgba(42,40,36,0.06)' : 'none',
+              }}
+            >
+              <h3 className="font-serif font-normal" style={{ fontSize: 18, color: '#2A2824', marginBottom: 2, lineHeight: 1.3 }}>
+                {item.role}
+              </h3>
+              <div style={{ fontSize: 14, color: '#6B6660', marginBottom: 5 }}>{item.company}</div>
+              <div style={{ fontSize: 13, color: '#A09A92', fontStyle: 'italic', lineHeight: 1.55 }}>{item.note}</div>
+            </div>
           </div>
-        </div>
+        ))}
       </ScrollReveal>
     </section>
   );
