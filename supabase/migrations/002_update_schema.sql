@@ -50,22 +50,33 @@ CREATE TABLE IF NOT EXISTS reactions (
 );
 
 -- ══════════════════════════════════════
--- RLS + policies for new tables
+-- RLS + policies for new tables (idempotent)
 -- ══════════════════════════════════════
 ALTER TABLE thoughts ENABLE ROW LEVEL SECURITY;
 ALTER TABLE reactions ENABLE ROW LEVEL SECURITY;
 
-CREATE POLICY "Public read" ON thoughts FOR SELECT USING (true);
-CREATE POLICY "Public read" ON reactions FOR SELECT USING (true);
-
-CREATE POLICY "Public increment" ON reactions FOR INSERT WITH CHECK (true);
-CREATE POLICY "Public update" ON reactions FOR UPDATE USING (true);
-
-CREATE POLICY "Auth write" ON thoughts FOR ALL USING (auth.role() = 'authenticated');
+DO $$ BEGIN
+  IF NOT EXISTS (SELECT 1 FROM pg_policies WHERE tablename = 'thoughts' AND policyname = 'Public read') THEN
+    CREATE POLICY "Public read" ON thoughts FOR SELECT USING (true);
+  END IF;
+  IF NOT EXISTS (SELECT 1 FROM pg_policies WHERE tablename = 'reactions' AND policyname = 'Public read') THEN
+    CREATE POLICY "Public read" ON reactions FOR SELECT USING (true);
+  END IF;
+  IF NOT EXISTS (SELECT 1 FROM pg_policies WHERE tablename = 'reactions' AND policyname = 'Public increment') THEN
+    CREATE POLICY "Public increment" ON reactions FOR INSERT WITH CHECK (true);
+  END IF;
+  IF NOT EXISTS (SELECT 1 FROM pg_policies WHERE tablename = 'reactions' AND policyname = 'Public update') THEN
+    CREATE POLICY "Public update" ON reactions FOR UPDATE USING (true);
+  END IF;
+  IF NOT EXISTS (SELECT 1 FROM pg_policies WHERE tablename = 'thoughts' AND policyname = 'Auth write') THEN
+    CREATE POLICY "Auth write" ON thoughts FOR ALL USING (auth.role() = 'authenticated');
+  END IF;
+END $$;
 
 -- ══════════════════════════════════════
--- Updated_at trigger for thoughts
+-- Updated_at trigger for thoughts (idempotent)
 -- ══════════════════════════════════════
+DROP TRIGGER IF EXISTS set_updated_at ON thoughts;
 CREATE TRIGGER set_updated_at
   BEFORE UPDATE ON thoughts
   FOR EACH ROW EXECUTE FUNCTION update_updated_at();
