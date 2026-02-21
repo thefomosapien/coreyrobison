@@ -55,23 +55,20 @@ CREATE TABLE IF NOT EXISTS reactions (
 ALTER TABLE thoughts ENABLE ROW LEVEL SECURITY;
 ALTER TABLE reactions ENABLE ROW LEVEL SECURITY;
 
-DO $$ BEGIN
-  IF NOT EXISTS (SELECT 1 FROM pg_policies WHERE tablename = 'thoughts' AND policyname = 'Public read') THEN
-    CREATE POLICY "Public read" ON thoughts FOR SELECT USING (true);
-  END IF;
-  IF NOT EXISTS (SELECT 1 FROM pg_policies WHERE tablename = 'reactions' AND policyname = 'Public read') THEN
-    CREATE POLICY "Public read" ON reactions FOR SELECT USING (true);
-  END IF;
-  IF NOT EXISTS (SELECT 1 FROM pg_policies WHERE tablename = 'reactions' AND policyname = 'Public increment') THEN
-    CREATE POLICY "Public increment" ON reactions FOR INSERT WITH CHECK (true);
-  END IF;
-  IF NOT EXISTS (SELECT 1 FROM pg_policies WHERE tablename = 'reactions' AND policyname = 'Public update') THEN
-    CREATE POLICY "Public update" ON reactions FOR UPDATE USING (true);
-  END IF;
-  IF NOT EXISTS (SELECT 1 FROM pg_policies WHERE tablename = 'thoughts' AND policyname = 'Auth write') THEN
-    CREATE POLICY "Auth write" ON thoughts FOR ALL USING (auth.role() = 'authenticated');
-  END IF;
-END $$;
+DROP POLICY IF EXISTS "Public read" ON thoughts;
+CREATE POLICY "Public read" ON thoughts FOR SELECT USING (true);
+
+DROP POLICY IF EXISTS "Public read" ON reactions;
+CREATE POLICY "Public read" ON reactions FOR SELECT USING (true);
+
+DROP POLICY IF EXISTS "Public increment" ON reactions;
+CREATE POLICY "Public increment" ON reactions FOR INSERT WITH CHECK (true);
+
+DROP POLICY IF EXISTS "Public update" ON reactions;
+CREATE POLICY "Public update" ON reactions FOR UPDATE USING (true);
+
+DROP POLICY IF EXISTS "Auth write" ON thoughts;
+CREATE POLICY "Auth write" ON thoughts FOR ALL USING (auth.role() = 'authenticated');
 
 -- ══════════════════════════════════════
 -- Updated_at trigger for thoughts (idempotent)
