@@ -95,3 +95,5 @@ npm run dev
 Deploy to Vercel by connecting your repository. Add the Supabase environment variables in the Vercel dashboard.
 
 The public site uses ISR with a 60-second revalidation period, so content changes appear quickly while maintaining fast load times.
+
+This is too hard.
