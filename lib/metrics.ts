@@ -47,8 +47,9 @@ export async function getProjectMetrics(
   }
 }
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 async function fetchUserMetrics(
-  client: ReturnType<typeof createClient>
+  client: { auth: { admin: { listUsers: (opts: { page: number; perPage: number }) => Promise<any> } } }
 ): Promise<{ totalUsers: number | null; newUsers7d: number | null; wau: number | null }> {
   const sevenDaysAgo = new Date(Date.now() - 7 * 24 * 60 * 60 * 1000).toISOString();
 
