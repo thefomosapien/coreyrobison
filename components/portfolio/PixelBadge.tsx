@@ -5,7 +5,7 @@ interface PixelBadgeProps {
 
 const styles: Record<string, { background: string; color: string }> = {
   accent: { background: 'rgba(90,138,154,0.1)', color: '#3D6E7A' },
-  muted: { background: 'rgba(42,40,36,0.05)', color: '#8A857D' },
+  muted: { background: 'rgba(42,40,36,0.06)', color: '#5A5550' },
   warm: { background: 'rgba(198,156,109,0.12)', color: '#9B7A52' },
   count: { background: 'rgba(90,138,154,0.08)', color: '#5A8A9A' },
 };

@@ -19,7 +19,7 @@ export default function AboutSection({ settings, details }: AboutSectionProps) {
         </h2>
         <div
           className="flex flex-col"
-          style={{ fontSize: 15, lineHeight: 1.75, color: '#6B6660', gap: 14, maxWidth: '60ch', marginBottom: 32 }}
+          style={{ fontSize: 16, lineHeight: 1.75, color: '#5A5550', gap: 14, maxWidth: '60ch', marginBottom: 32 }}
         >
           {(settings.about_paragraphs || []).map((p, i) => (
             <p key={i}>{p}</p>
@@ -30,11 +30,11 @@ export default function AboutSection({ settings, details }: AboutSectionProps) {
             <div key={detail.id}>
               <div
                 className="font-pixel uppercase"
-                style={{ fontSize: 9, color: '#B5AFA5', marginBottom: 6 }}
+                style={{ fontSize: 9, color: '#7A7570', marginBottom: 6 }}
               >
                 {detail.label}
               </div>
-              <div style={{ fontSize: 13, lineHeight: 1.6, color: '#6B6660' }}>{detail.value}</div>
+              <div style={{ fontSize: 14, lineHeight: 1.65, color: '#5A5550' }}>{detail.value}</div>
             </div>
           ))}
         </div>

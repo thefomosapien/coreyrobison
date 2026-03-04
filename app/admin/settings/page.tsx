@@ -34,7 +34,7 @@ export default function SettingsPage() {
     return () => window.removeEventListener('beforeunload', handleBeforeUnload);
   }, [dirty]);
 
-  const updateField = useCallback((field: keyof SiteSettings, value: string | string[] | null) => {
+  const updateField = useCallback((field: string, value: string | string[] | null) => {
     setSettings((prev) => prev ? { ...prev, [field]: value } : prev);
     setDirty(true);
   }, []);
@@ -54,6 +54,7 @@ export default function SettingsPage() {
         company_badge_url: settings.company_badge_url,
         bio_paragraphs: settings.bio_paragraphs,
         photo_url: settings.photo_url,
+        photo_alt_url: settings.photo_alt_url || null,
         about_headline: settings.about_headline,
         about_paragraphs: settings.about_paragraphs,
         contact_headline: settings.contact_headline,
@@ -145,14 +146,25 @@ export default function SettingsPage() {
 
         <Section title="Photo">
           <Field
-            label="Photo URL"
+            label="Primary Photo URL"
             value={settings.photo_url || ''}
             onChange={(v) => updateField('photo_url', v || null)}
           />
           {settings.photo_url && (
             <div className="mt-2">
               {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img src={settings.photo_url} alt="Photo preview" className="h-24 rounded-lg object-cover" />
+              <img src={settings.photo_url} alt="Primary photo preview" className="h-24 rounded-lg object-cover" />
+            </div>
+          )}
+          <Field
+            label="Alternate Photo URL (Easter Egg)"
+            value={settings.photo_alt_url || ''}
+            onChange={(v) => updateField('photo_alt_url', v || null)}
+          />
+          {settings.photo_alt_url && (
+            <div className="mt-2">
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img src={settings.photo_alt_url} alt="Alternate photo preview" className="h-24 rounded-lg object-cover" />
             </div>
           )}
         </Section>
@@ -196,8 +208,14 @@ export default function SettingsPage() {
 
         <Section title="Contact">
           <Field label="Contact Headline" value={settings.contact_headline} onChange={(v) => updateField('contact_headline', v)} />
-          <Field label="Email" value={settings.email} onChange={(v) => updateField('email', v)} />
-          <Field label="LinkedIn URL" value={settings.linkedin_url} onChange={(v) => updateField('linkedin_url', v)} />
+          <div>
+            <Field label="Email Address" value={settings.email} onChange={(v) => updateField('email', v)} />
+            <p className="text-xs text-ink-muted mt-1">This appears in the Get in touch section.</p>
+          </div>
+          <div>
+            <Field label="LinkedIn URL" value={settings.linkedin_url} onChange={(v) => updateField('linkedin_url', v)} />
+            <p className="text-xs text-ink-muted mt-1">This appears in the Get in touch section alongside the email.</p>
+          </div>
         </Section>
 
         <Section title="Footer">

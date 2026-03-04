@@ -67,7 +67,7 @@ export default function Reactions({ targetType, targetId, initialReactions }: Re
               background: hasCount ? 'rgba(90,138,154,0.08)' : 'transparent',
               cursor: 'pointer',
               fontSize: 13,
-              color: hasCount ? '#3D6E7A' : '#A09A92',
+              color: hasCount ? '#3D6E7A' : '#7A7570',
               fontWeight: hasCount ? 500 : 400,
               lineHeight: 1,
               transform: pulsing[key] ? 'scale(1.12)' : 'scale(1)',
