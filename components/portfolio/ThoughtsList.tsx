@@ -22,7 +22,7 @@ export default function ThoughtsList({ thoughts, reactionTotals }: ThoughtsListP
           {thoughts.map((t, i) => (
             <a
               key={t.slug}
-              href={`#${t.slug}`}
+              href={`/thoughts/${t.slug}`}
               className="flex items-center justify-between gap-4 group"
               style={{
                 padding: '14px 0',
