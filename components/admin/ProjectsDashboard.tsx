@@ -2,14 +2,22 @@
 
 import { useState } from 'react';
 import { createClient } from '@/lib/supabase/client';
-import type { DeployedProject } from '@/lib/types';
+import type { DeployedProject, ProjectMetrics } from '@/lib/types';
 import ProjectCard from './ProjectCard';
+
+function formatMetric(n: number | null | undefined): string {
+  if (n == null) return '\u2014';
+  if (n >= 1000) return `${(n / 1000).toFixed(1).replace(/\.0$/, '')}k`;
+  return String(n);
+}
 
 export default function ProjectsDashboard({
   projects,
+  metrics,
   onRefresh,
 }: {
   projects: DeployedProject[];
+  metrics: Record<string, ProjectMetrics>;
   onRefresh: () => Promise<void>;
 }) {
   const [showAddForm, setShowAddForm] = useState(false);
@@ -18,6 +26,12 @@ export default function ProjectsDashboard({
   const totalCount = projects.length;
   const healthyCount = projects.filter((p) => p.status === 'healthy').length;
   const alertCount = projects.filter((p) => p.status !== 'healthy').length;
+
+  // Aggregate metrics across all projects
+  const allMetrics = Object.values(metrics);
+  const totalUsers = allMetrics.reduce((sum, m) => sum + (m.totalUsers ?? 0), 0);
+  const totalNew7d = allMetrics.reduce((sum, m) => sum + (m.newUsers7d ?? 0), 0);
+  const hasAnyMetrics = allMetrics.some((m) => !m.error);
 
   const handleAdd = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -89,13 +103,13 @@ export default function ProjectsDashboard({
         />
         <SummaryCell
           label="Total Users"
-          value="\u2014"
-          subtext="connect metrics to populate"
+          value={hasAnyMetrics ? formatMetric(totalUsers) : '\u2014'}
+          subtext={hasAnyMetrics ? 'across all projects' : 'no projects reachable'}
         />
         <SummaryCell
           label="New / 7d"
-          value="\u2014"
-          subtext="connect metrics to populate"
+          value={hasAnyMetrics ? formatMetric(totalNew7d) : '\u2014'}
+          subtext={hasAnyMetrics ? (totalNew7d > 0 ? '\u2191 trending' : 'quiet week') : 'no projects reachable'}
         />
         <SummaryCell
           label="Alerts"
@@ -108,7 +122,7 @@ export default function ProjectsDashboard({
       {/* Project Cards */}
       <div className="space-y-4">
         {projects.map((project) => (
-          <ProjectCard key={project.id} project={project} onRefresh={onRefresh} />
+          <ProjectCard key={project.id} project={project} metrics={metrics[project.id] || null} onRefresh={onRefresh} />
         ))}
         {projects.length === 0 && (
           <div
