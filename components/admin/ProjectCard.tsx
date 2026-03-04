@@ -2,10 +2,16 @@
 
 import { useState } from 'react';
 import { createClient } from '@/lib/supabase/client';
-import type { DeployedProject } from '@/lib/types';
+import type { DeployedProject, ProjectMetrics } from '@/lib/types';
 import CredentialRow from './CredentialRow';
 
 type Tab = 'metrics' | 'credentials' | 'notes';
+
+function formatMetric(n: number | null | undefined): string {
+  if (n == null) return '\u2014';
+  if (n >= 1000) return `${(n / 1000).toFixed(1).replace(/\.0$/, '')}k`;
+  return String(n);
+}
 
 const STATUS_STYLES: Record<string, { bg: string; text: string; dot: string }> = {
   healthy: { bg: 'rgba(61,110,92,0.1)', text: '#3D6E5C', dot: '#3D6E5C' },
@@ -25,9 +31,11 @@ function getSupabaseRef(projectUrl: string | null): string | null {
 
 export default function ProjectCard({
   project,
+  metrics,
   onRefresh,
 }: {
   project: DeployedProject;
+  metrics: ProjectMetrics | null;
   onRefresh: () => Promise<void>;
 }) {
   const [expanded, setExpanded] = useState(false);
@@ -156,14 +164,23 @@ export default function ProjectCard({
         className="grid grid-cols-4 border-t mx-5"
         style={{ borderColor: 'rgba(42,40,36,0.06)' }}
       >
-        {['Total Users', 'New 7d', 'Weekly Active', 'Uptime'].map((label) => (
-          <div key={label} className="py-2.5 text-center">
-            <div className="font-pixel text-[7px] uppercase tracking-wider text-ink-faint mb-0.5">
-              {label}
-            </div>
-            <div className="font-serif text-sm text-ink-muted">&mdash;</div>
+        {metrics?.error ? (
+          <div className="col-span-4 py-2.5 text-center">
+            <span
+              className="inline-block font-pixel text-[8px] uppercase tracking-wider px-2.5 py-1 rounded-full"
+              style={{ backgroundColor: 'rgba(198,140,90,0.12)', color: '#C68C5A' }}
+            >
+              can&apos;t reach db
+            </span>
           </div>
-        ))}
+        ) : (
+          <>
+            <QuickMetricCell label="Total Users" value={formatMetric(metrics?.totalUsers)} />
+            <QuickMetricCell label="New 7d" value={formatMetric(metrics?.newUsers7d)} />
+            <QuickMetricCell label="Weekly Active" value={formatMetric(metrics?.wau)} />
+            <QuickMetricCell label="Uptime" value="\u2014" />
+          </>
+        )}
       </div>
 
       {/* Expanded Panel */}
@@ -198,7 +215,7 @@ export default function ProjectCard({
               </div>
 
               {/* Tab Content */}
-              {activeTab === 'metrics' && <MetricsTab />}
+              {activeTab === 'metrics' && <MetricsTab metrics={metrics} />}
               {activeTab === 'credentials' && <CredentialsTab project={project} projectRef={projectRef} />}
               {activeTab === 'notes' && <NotesTab notes={project.notes} />}
             </>
@@ -209,18 +226,74 @@ export default function ProjectCard({
   );
 }
 
-function MetricsTab() {
-  const metrics = [
-    { label: 'Total Users', note: 'all time' },
-    { label: 'New Signups', note: 'last 7 days' },
-    { label: 'Weekly Active', note: 'unique sessions' },
-    { label: 'Site Uptime', note: 'last 30 days' },
+function QuickMetricCell({ label, value }: { label: string; value: string }) {
+  return (
+    <div className="py-2.5 text-center">
+      <div className="font-pixel text-[7px] uppercase tracking-wider text-ink-faint mb-0.5">
+        {label}
+      </div>
+      <div className="font-serif text-sm text-ink-muted">{value}</div>
+    </div>
+  );
+}
+
+function MetricsTab({ metrics }: { metrics: ProjectMetrics | null }) {
+  if (metrics?.error) {
+    return (
+      <div
+        className="rounded-lg p-4 border text-center"
+        style={{ borderColor: 'rgba(198,140,90,0.15)', backgroundColor: 'rgba(198,140,90,0.05)' }}
+      >
+        <span
+          className="inline-block font-pixel text-[8px] uppercase tracking-wider px-2.5 py-1 rounded-full mb-2"
+          style={{ backgroundColor: 'rgba(198,140,90,0.12)', color: '#C68C5A' }}
+        >
+          can&apos;t reach db
+        </span>
+        <p className="text-xs text-ink-ghost">{metrics.error}</p>
+      </div>
+    );
+  }
+
+  const wauPercent =
+    metrics?.wau != null && metrics?.totalUsers != null && metrics.totalUsers > 0
+      ? Math.round((metrics.wau / metrics.totalUsers) * 100)
+      : null;
+
+  const newUsersSubtext =
+    metrics?.newUsers7d != null
+      ? metrics.newUsers7d > 0
+        ? '\u2191 trending'
+        : 'quiet week'
+      : '';
+
+  const metricsData = [
+    {
+      label: 'Total Users',
+      value: formatMetric(metrics?.totalUsers),
+      note: 'all time',
+    },
+    {
+      label: 'New Signups',
+      value: formatMetric(metrics?.newUsers7d),
+      note: newUsersSubtext || 'last 7 days',
+    },
+    {
+      label: 'Weekly Active',
+      value: formatMetric(metrics?.wau),
+      note: wauPercent != null ? `${wauPercent}% of total` : 'unique sessions',
+    },
+    {
+      label: 'Site Uptime',
+      value: '\u2014',
+      note: 'coming soon',
+    },
   ];
 
   return (
     <div>
       <div className="grid grid-cols-2 gap-3">
-        {metrics.map((m) => (
+        {metricsData.map((m) => (
           <div
             key={m.label}
             className="rounded-lg p-4 border"
@@ -229,14 +302,11 @@ function MetricsTab() {
             <div className="font-pixel text-[8px] uppercase tracking-wider text-ink-faint mb-1">
               {m.label}
             </div>
-            <div className="font-serif text-2xl text-ink-muted">&mdash;</div>
+            <div className="font-serif text-2xl text-ink-muted">{m.value}</div>
             <div className="text-[11px] text-ink-ghost mt-0.5">{m.note}</div>
           </div>
         ))}
       </div>
-      <p className="text-xs text-ink-ghost italic mt-4">
-        Live metrics require a /api/metrics endpoint in each project — see the README for wiring instructions.
-      </p>
     </div>
   );
 }

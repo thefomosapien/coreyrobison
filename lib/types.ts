@@ -98,6 +98,14 @@ export interface DeployedProject {
   updated_at: string;
 }
 
+export interface ProjectMetrics {
+  projectId: string;
+  totalUsers: number | null;
+  newUsers7d: number | null;
+  wau: number | null;
+  error: string | null;
+}
+
 export const REACTION_MAP: Record<string, { emoji: string; label: string }> = {
   thoughtful: { emoji: '🤔', label: 'Very thoughtful' },
   relatable: { emoji: '🙏', label: 'So relatable' },

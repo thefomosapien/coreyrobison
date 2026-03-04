@@ -1,36 +1,51 @@
-'use client';
+import { createServerSupabaseClient } from '@/lib/supabase/server';
+import { getProjectMetrics } from '@/lib/metrics';
+import type { DeployedProject, ProjectMetrics } from '@/lib/types';
+import ProjectsDashboardClient from './client';
 
-import { useEffect, useState } from 'react';
-import { createClient } from '@/lib/supabase/client';
-import type { DeployedProject } from '@/lib/types';
-import ProjectsDashboard from '@/components/admin/ProjectsDashboard';
+export const dynamic = 'force-dynamic';
 
-export default function ProjectsDashboardPage() {
-  const [projects, setProjects] = useState<DeployedProject[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
+export default async function ProjectsDashboardPage() {
+  const supabase = createServerSupabaseClient();
+  if (!supabase) {
+    return <div className="text-ink-muted">Supabase not configured.</div>;
+  }
 
-  const loadProjects = async () => {
-    const supabase = createClient();
-    const { data, error } = await supabase
-      .from('deployed_projects')
-      .select('*')
-      .order('sort_order', { ascending: true });
+  const { data, error } = await supabase
+    .from('deployed_projects')
+    .select('*')
+    .order('sort_order', { ascending: true });
 
-    if (error) {
-      setError(error.message);
+  if (error) {
+    return <div className="text-ink-muted">Failed to load projects: {error.message}</div>;
+  }
+
+  const projects = (data || []) as DeployedProject[];
+
+  // Fetch metrics for all projects in parallel
+  const metricsResults = await Promise.allSettled(
+    projects.map((p) => getProjectMetrics(p))
+  );
+
+  const metricsMap: Record<string, ProjectMetrics> = {};
+  metricsResults.forEach((result, i) => {
+    if (result.status === 'fulfilled') {
+      metricsMap[projects[i].id] = result.value;
     } else {
-      setProjects((data || []) as DeployedProject[]);
+      metricsMap[projects[i].id] = {
+        projectId: projects[i].id,
+        totalUsers: null,
+        newUsers7d: null,
+        wau: null,
+        error: 'failed to fetch metrics',
+      };
     }
-    setLoading(false);
-  };
+  });
 
-  useEffect(() => {
-    loadProjects();
-  }, []);
-
-  if (loading) return <div className="text-ink-muted">Loading...</div>;
-  if (error) return <div className="text-ink-muted">Failed to load projects: {error}</div>;
-
-  return <ProjectsDashboard projects={projects} onRefresh={loadProjects} />;
+  return (
+    <ProjectsDashboardClient
+      initialProjects={projects}
+      initialMetrics={metricsMap}
+    />
+  );
 }
