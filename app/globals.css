@@ -49,3 +49,13 @@ body {
   0%, 100% { transform: translateX(0); }
   50% { transform: translateX(-12px); }
 }
+
+/* Status dot pulse for healthy projects */
+@keyframes pulseDot {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.4; }
+}
+
+.animate-pulse-dot {
+  animation: pulseDot 2s ease-in-out infinite;
+}
