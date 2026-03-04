@@ -79,6 +79,25 @@ export interface ContactLink {
   sort_order: number;
 }
 
+export interface DeployedProject {
+  id: string;
+  name: string;
+  description: string | null;
+  url: string | null;
+  github_url: string | null;
+  status: 'healthy' | 'warning' | 'paused' | 'error';
+  color_hex: string | null;
+  supabase_account_email: string | null;
+  supabase_project_url: string | null;
+  supabase_anon_key: string | null;
+  supabase_service_key: string | null;
+  notes: string | null;
+  sort_order: number;
+  is_visible: boolean;
+  created_at: string;
+  updated_at: string;
+}
+
 export const REACTION_MAP: Record<string, { emoji: string; label: string }> = {
   thoughtful: { emoji: '🤔', label: 'Very thoughtful' },
   relatable: { emoji: '🙏', label: 'So relatable' },

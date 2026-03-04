@@ -87,6 +87,9 @@ export default function AdminDashboard() {
           <a href="/admin/projects" className="px-4 py-2 rounded-lg bg-bg-alt text-sm font-medium hover:bg-ink hover:text-white transition">
             Manage Projects
           </a>
+          <a href="/admin/projects-dashboard" className="px-4 py-2 rounded-lg bg-bg-alt text-sm font-medium hover:bg-ink hover:text-white transition">
+            My Apps
+          </a>
           <a href="/" target="_blank" className="px-4 py-2 rounded-lg bg-bg-alt text-sm font-medium hover:bg-ink hover:text-white transition">
             View Live Site ↗
           </a>

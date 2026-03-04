@@ -14,6 +14,7 @@ const navItems = [
   { href: '/admin/about', label: 'About', icon: '☻' },
   { href: '/admin/contact', label: 'Contact', icon: '✉' },
   { href: '/admin/reactions', label: 'Reactions', icon: '♡' },
+  { href: '/admin/projects-dashboard', label: 'My Apps', icon: '▦' },
 ];
 
 export default function Sidebar() {
