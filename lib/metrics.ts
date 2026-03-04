@@ -21,18 +21,14 @@ export async function getProjectMetrics(
   const projectUrl = project.supabase_project_url.replace(/\/$/, '');
   const serviceKey = project.supabase_service_key;
 
-  let client;
   try {
-    client = createClient(projectUrl, serviceKey, {
+    const client = createClient(projectUrl, serviceKey, {
       auth: { autoRefreshToken: false, persistSession: false },
     });
-  } catch (e: unknown) {
-    return { ...base, error: `client init failed: ${e instanceof Error ? e.message : String(e)}` };
-  }
+    const sevenDaysAgo = new Date(Date.now() - 7 * 24 * 60 * 60 * 1000).toISOString();
 
-  try {
     const result = await Promise.race([
-      fetchUserMetrics(client),
+      fetchUserMetrics(client, sevenDaysAgo),
       new Promise<never>((_, reject) =>
         setTimeout(() => reject(new Error('timeout')), TIMEOUT_MS)
       ),
@@ -47,12 +43,13 @@ export async function getProjectMetrics(
   }
 }
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-async function fetchUserMetrics(
-  client: { auth: { admin: { listUsers: (opts: { page: number; perPage: number }) => Promise<any> } } }
-): Promise<{ totalUsers: number | null; newUsers7d: number | null; wau: number | null }> {
-  const sevenDaysAgo = new Date(Date.now() - 7 * 24 * 60 * 60 * 1000).toISOString();
+type SupabaseClient = ReturnType<typeof createClient>;
+type UserMetricsResult = { totalUsers: number | null; newUsers7d: number | null; wau: number | null };
 
+async function fetchUserMetrics(
+  client: SupabaseClient,
+  sevenDaysAgo: string
+): Promise<UserMetricsResult> {
   // Use the auth admin API — this is the only way to access auth.users
   // via supabase-js since PostgREST doesn't expose the auth schema.
   // Fetch up to 1000 users per page and paginate if needed.
