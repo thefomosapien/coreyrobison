@@ -27,8 +27,40 @@ export async function getProjectMetrics(
     });
     const sevenDaysAgo = new Date(Date.now() - 7 * 24 * 60 * 60 * 1000).toISOString();
 
+    const metricsPromise = (async () => {
+      let allUsers: { created_at: string; last_sign_in_at: string | null }[] = [];
+      let page = 1;
+      const perPage = 1000;
+
+      while (true) {
+        const { data, error } = await client.auth.admin.listUsers({ page, perPage });
+
+        if (error) {
+          return { totalUsers: null, newUsers7d: null, wau: null };
+        }
+
+        allUsers = allUsers.concat(
+          data.users.map((u) => ({
+            created_at: u.created_at,
+            last_sign_in_at: u.last_sign_in_at ?? null,
+          }))
+        );
+
+        if (data.users.length < perPage) break;
+        page++;
+      }
+
+      const totalUsers = allUsers.length;
+      const newUsers7d = allUsers.filter((u) => u.created_at >= sevenDaysAgo).length;
+      const wau = allUsers.filter(
+        (u) => u.last_sign_in_at && u.last_sign_in_at >= sevenDaysAgo
+      ).length;
+
+      return { totalUsers, newUsers7d, wau };
+    })();
+
     const result = await Promise.race([
-      fetchUserMetrics(client, sevenDaysAgo),
+      metricsPromise,
       new Promise<never>((_, reject) =>
         setTimeout(() => reject(new Error('timeout')), TIMEOUT_MS)
       ),
@@ -41,48 +73,4 @@ export async function getProjectMetrics(
       error: e instanceof Error ? e.message : 'unknown error',
     };
   }
-}
-
-type SupabaseClient = ReturnType<typeof createClient>;
-type UserMetricsResult = { totalUsers: number | null; newUsers7d: number | null; wau: number | null };
-
-async function fetchUserMetrics(
-  client: SupabaseClient,
-  sevenDaysAgo: string
-): Promise<UserMetricsResult> {
-  // Use the auth admin API — this is the only way to access auth.users
-  // via supabase-js since PostgREST doesn't expose the auth schema.
-  // Fetch up to 1000 users per page and paginate if needed.
-  let allUsers: { created_at: string; last_sign_in_at: string | null }[] = [];
-  let page = 1;
-  const perPage = 1000;
-
-  while (true) {
-    const { data, error } = await client.auth.admin.listUsers({ page, perPage });
-
-    if (error) {
-      return { totalUsers: null, newUsers7d: null, wau: null };
-    }
-
-    allUsers = allUsers.concat(
-      data.users.map((u) => ({
-        created_at: u.created_at,
-        last_sign_in_at: u.last_sign_in_at ?? null,
-      }))
-    );
-
-    // If we got fewer than perPage, we've fetched all users
-    if (data.users.length < perPage) break;
-    page++;
-  }
-
-  const totalUsers = allUsers.length;
-  const newUsers7d = allUsers.filter((u) => u.created_at >= sevenDaysAgo).length;
-
-  // WAU: count users who signed in within the last 7 days
-  const wau = allUsers.filter(
-    (u) => u.last_sign_in_at && u.last_sign_in_at >= sevenDaysAgo
-  ).length;
-
-  return { totalUsers, newUsers7d, wau };
 }
