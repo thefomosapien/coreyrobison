@@ -1,6 +1,6 @@
 import { createClient } from '@supabase/supabase-js';
 import { notFound } from 'next/navigation';
-import type { Thought, Reaction } from '@/lib/types';
+import type { Thought } from '@/lib/types';
 import BackgroundAmbiance from '@/components/portfolio/BackgroundAmbiance';
 import ThoughtContent from '@/components/portfolio/ThoughtContent';
 
