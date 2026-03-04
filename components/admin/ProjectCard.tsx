@@ -1,9 +1,9 @@
 'use client';
 
-import { useState, useTransition } from 'react';
+import { useState } from 'react';
+import { createClient } from '@/lib/supabase/client';
 import type { DeployedProject } from '@/lib/types';
 import CredentialRow from './CredentialRow';
-import { updateProject, deleteProject } from '@/app/admin/projects-dashboard/actions';
 
 type Tab = 'metrics' | 'credentials' | 'notes';
 
@@ -23,35 +23,64 @@ function getSupabaseRef(projectUrl: string | null): string | null {
   }
 }
 
-export default function ProjectCard({ project }: { project: DeployedProject }) {
+export default function ProjectCard({
+  project,
+  onRefresh,
+}: {
+  project: DeployedProject;
+  onRefresh: () => Promise<void>;
+}) {
   const [expanded, setExpanded] = useState(false);
   const [activeTab, setActiveTab] = useState<Tab>('metrics');
   const [editing, setEditing] = useState(false);
-  const [isPending, startTransition] = useTransition();
+  const [saving, setSaving] = useState(false);
 
   const statusStyle = STATUS_STYLES[project.status] || STATUS_STYLES.healthy;
-  const ref = getSupabaseRef(project.supabase_project_url);
+  const projectRef = getSupabaseRef(project.supabase_project_url);
 
-  const handleUpdate = (formData: FormData) => {
-    startTransition(async () => {
-      try {
-        await updateProject(formData);
-        setEditing(false);
-      } catch (e) {
-        alert(e instanceof Error ? e.message : 'Failed to update');
-      }
-    });
+  const handleUpdate = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    setSaving(true);
+    const fd = new FormData(e.currentTarget);
+
+    const supabase = createClient();
+    const { error } = await supabase
+      .from('deployed_projects')
+      .update({
+        name: fd.get('name') as string,
+        description: (fd.get('description') as string) || null,
+        url: (fd.get('url') as string) || null,
+        github_url: (fd.get('github_url') as string) || null,
+        status: (fd.get('status') as string) || 'healthy',
+        color_hex: (fd.get('color_hex') as string) || null,
+        supabase_account_email: (fd.get('supabase_account_email') as string) || null,
+        supabase_project_url: (fd.get('supabase_project_url') as string) || null,
+        supabase_anon_key: (fd.get('supabase_anon_key') as string) || null,
+        supabase_service_key: (fd.get('supabase_service_key') as string) || null,
+        notes: (fd.get('notes') as string) || null,
+        sort_order: parseInt(fd.get('sort_order') as string) || 0,
+        updated_at: new Date().toISOString(),
+      })
+      .eq('id', project.id);
+
+    setSaving(false);
+    if (error) {
+      alert(error.message);
+    } else {
+      setEditing(false);
+      await onRefresh();
+    }
   };
 
-  const handleDelete = (formData: FormData) => {
+  const handleDelete = async () => {
     if (!confirm('Delete this project? This cannot be undone.')) return;
-    startTransition(async () => {
-      try {
-        await deleteProject(formData);
-      } catch (e) {
-        alert(e instanceof Error ? e.message : 'Failed to delete');
-      }
-    });
+    const supabase = createClient();
+    const { error } = await supabase.from('deployed_projects').delete().eq('id', project.id);
+    if (error) {
+      alert(error.message);
+    } else {
+      await onRefresh();
+    }
   };
 
   return (
@@ -141,7 +170,7 @@ export default function ProjectCard({ project }: { project: DeployedProject }) {
       {expanded && (
         <div className="border-t px-5 py-4" style={{ borderColor: 'rgba(42,40,36,0.06)' }}>
           {editing ? (
-            <EditForm project={project} onCancel={() => setEditing(false)} onSubmit={handleUpdate} onDelete={handleDelete} isPending={isPending} />
+            <EditForm project={project} onCancel={() => setEditing(false)} onSubmit={handleUpdate} onDelete={handleDelete} isPending={saving} />
           ) : (
             <>
               {/* Tab Bar */}
@@ -170,7 +199,7 @@ export default function ProjectCard({ project }: { project: DeployedProject }) {
 
               {/* Tab Content */}
               {activeTab === 'metrics' && <MetricsTab />}
-              {activeTab === 'credentials' && <CredentialsTab project={project} projectRef={ref} />}
+              {activeTab === 'credentials' && <CredentialsTab project={project} projectRef={projectRef} />}
               {activeTab === 'notes' && <NotesTab notes={project.notes} />}
             </>
           )}
@@ -266,13 +295,12 @@ function EditForm({
 }: {
   project: DeployedProject;
   onCancel: () => void;
-  onSubmit: (formData: FormData) => void;
-  onDelete: (formData: FormData) => void;
+  onSubmit: (e: React.FormEvent<HTMLFormElement>) => void;
+  onDelete: () => void;
   isPending: boolean;
 }) {
   return (
-    <form action={onSubmit}>
-      <input type="hidden" name="id" value={project.id} />
+    <form onSubmit={onSubmit}>
       <div className="space-y-3">
         <div className="grid grid-cols-2 gap-3">
           <FormField label="Name" name="name" defaultValue={project.name} required />
@@ -325,11 +353,7 @@ function EditForm({
       <div className="flex items-center justify-between mt-4 pt-3 border-t" style={{ borderColor: 'rgba(42,40,36,0.06)' }}>
         <button
           type="button"
-          onClick={() => {
-            const fd = new FormData();
-            fd.set('id', project.id);
-            onDelete(fd);
-          }}
+          onClick={onDelete}
           className="text-xs text-red-500 hover:text-red-700 transition-colors"
         >
           Delete project

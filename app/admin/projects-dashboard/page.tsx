@@ -1,28 +1,36 @@
-import { createServerSupabaseClient } from '@/lib/supabase/server';
-import ProjectsDashboard from '@/components/admin/ProjectsDashboard';
+'use client';
+
+import { useEffect, useState } from 'react';
+import { createClient } from '@/lib/supabase/client';
 import type { DeployedProject } from '@/lib/types';
+import ProjectsDashboard from '@/components/admin/ProjectsDashboard';
 
-export const metadata = {
-  title: 'Projects Dashboard — Admin',
-};
+export default function ProjectsDashboardPage() {
+  const [projects, setProjects] = useState<DeployedProject[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
-export default async function ProjectsDashboardPage() {
-  const supabase = createServerSupabaseClient();
+  const loadProjects = async () => {
+    const supabase = createClient();
+    const { data, error } = await supabase
+      .from('deployed_projects')
+      .select('*')
+      .order('sort_order', { ascending: true });
 
-  if (!supabase) {
-    return <div className="text-ink-muted">Supabase not configured.</div>;
-  }
+    if (error) {
+      setError(error.message);
+    } else {
+      setProjects((data || []) as DeployedProject[]);
+    }
+    setLoading(false);
+  };
 
-  const { data, error } = await supabase
-    .from('deployed_projects')
-    .select('*')
-    .order('sort_order', { ascending: true });
+  useEffect(() => {
+    loadProjects();
+  }, []);
 
-  if (error) {
-    return <div className="text-ink-muted">Failed to load projects: {error.message}</div>;
-  }
+  if (loading) return <div className="text-ink-muted">Loading...</div>;
+  if (error) return <div className="text-ink-muted">Failed to load projects: {error}</div>;
 
-  const projects = (data || []) as DeployedProject[];
-
-  return <ProjectsDashboard projects={projects} />;
+  return <ProjectsDashboard projects={projects} onRefresh={loadProjects} />;
 }

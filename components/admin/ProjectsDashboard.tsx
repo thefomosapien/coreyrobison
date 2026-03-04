@@ -1,27 +1,53 @@
 'use client';
 
-import { useState, useTransition } from 'react';
+import { useState } from 'react';
+import { createClient } from '@/lib/supabase/client';
 import type { DeployedProject } from '@/lib/types';
 import ProjectCard from './ProjectCard';
-import { addProject } from '@/app/admin/projects-dashboard/actions';
 
-export default function ProjectsDashboard({ projects }: { projects: DeployedProject[] }) {
+export default function ProjectsDashboard({
+  projects,
+  onRefresh,
+}: {
+  projects: DeployedProject[];
+  onRefresh: () => Promise<void>;
+}) {
   const [showAddForm, setShowAddForm] = useState(false);
-  const [isPending, startTransition] = useTransition();
+  const [saving, setSaving] = useState(false);
 
   const totalCount = projects.length;
   const healthyCount = projects.filter((p) => p.status === 'healthy').length;
   const alertCount = projects.filter((p) => p.status !== 'healthy').length;
 
-  const handleAdd = (formData: FormData) => {
-    startTransition(async () => {
-      try {
-        await addProject(formData);
-        setShowAddForm(false);
-      } catch (e) {
-        alert(e instanceof Error ? e.message : 'Failed to add project');
-      }
+  const handleAdd = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    setSaving(true);
+    const form = e.currentTarget;
+    const fd = new FormData(form);
+
+    const supabase = createClient();
+    const { error } = await supabase.from('deployed_projects').insert({
+      name: fd.get('name') as string,
+      description: (fd.get('description') as string) || null,
+      url: (fd.get('url') as string) || null,
+      github_url: (fd.get('github_url') as string) || null,
+      status: (fd.get('status') as string) || 'healthy',
+      color_hex: (fd.get('color_hex') as string) || null,
+      supabase_account_email: (fd.get('supabase_account_email') as string) || null,
+      supabase_project_url: (fd.get('supabase_project_url') as string) || null,
+      supabase_anon_key: (fd.get('supabase_anon_key') as string) || null,
+      supabase_service_key: (fd.get('supabase_service_key') as string) || null,
+      notes: (fd.get('notes') as string) || null,
+      sort_order: parseInt(fd.get('sort_order') as string) || 0,
     });
+
+    setSaving(false);
+    if (error) {
+      alert(error.message);
+    } else {
+      setShowAddForm(false);
+      await onRefresh();
+    }
   };
 
   return (
@@ -47,7 +73,7 @@ export default function ProjectsDashboard({ projects }: { projects: DeployedProj
           style={{ borderColor: 'rgba(42,40,36,0.08)', backgroundColor: '#FDFCF9' }}
         >
           <h2 className="font-serif text-lg mb-4">New Deployed Project</h2>
-          <AddForm onSubmit={handleAdd} isPending={isPending} />
+          <AddForm onSubmit={handleAdd} isPending={saving} />
         </div>
       )}
 
@@ -82,7 +108,7 @@ export default function ProjectsDashboard({ projects }: { projects: DeployedProj
       {/* Project Cards */}
       <div className="space-y-4">
         {projects.map((project) => (
-          <ProjectCard key={project.id} project={project} />
+          <ProjectCard key={project.id} project={project} onRefresh={onRefresh} />
         ))}
         {projects.length === 0 && (
           <div
@@ -124,9 +150,9 @@ function SummaryCell({
   );
 }
 
-function AddForm({ onSubmit, isPending }: { onSubmit: (formData: FormData) => void; isPending: boolean }) {
+function AddForm({ onSubmit, isPending }: { onSubmit: (e: React.FormEvent<HTMLFormElement>) => void; isPending: boolean }) {
   return (
-    <form action={onSubmit}>
+    <form onSubmit={onSubmit}>
       <div className="space-y-3">
         <div className="grid grid-cols-2 gap-3">
           <FormField label="Name" name="name" required />
