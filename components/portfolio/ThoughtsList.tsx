@@ -1,4 +1,5 @@
 import type { Thought } from '@/lib/types';
+import { getCategoryStyle } from '@/lib/categoryStyles';
 import PixelBadge from './PixelBadge';
 import ScrollReveal from './ScrollReveal';
 
@@ -19,35 +20,49 @@ export default function ThoughtsList({ thoughts, reactionTotals }: ThoughtsListP
           Latest thoughts
         </h2>
         <div className="flex flex-col">
-          {thoughts.map((t, i) => (
-            <a
-              key={t.slug}
-              href={`/thoughts/${t.slug}`}
-              className="flex items-center justify-between gap-4 group"
-              style={{
-                padding: '14px 0',
-                borderBottom: i < thoughts.length - 1 ? '1px solid rgba(42,40,36,0.06)' : 'none',
-              }}
-            >
-              <div className="flex items-center gap-3 flex-1 min-w-0">
-                <h3
-                  className="font-serif text-[17px] font-normal leading-[1.3] group-hover:text-ocean transition-colors duration-150 whitespace-nowrap overflow-hidden text-ellipsis"
-                  style={{ color: '#2A2824' }}
-                >
-                  {t.title}
-                </h3>
-                <PixelBadge variant="muted">{t.category}</PixelBadge>
-              </div>
-              <div className="flex items-center gap-2 flex-shrink-0">
-                <PixelBadge variant="count">
-                  {reactionTotals[t.id] || 0} ♡
-                </PixelBadge>
-              </div>
-            </a>
-          ))}
+          {thoughts.map((t, i) => {
+            const catStyle = getCategoryStyle(t.category);
+            return (
+              <a
+                key={t.slug}
+                href={`/thoughts/${t.slug}`}
+                className="flex items-center justify-between gap-4 group"
+                style={{
+                  padding: '14px 0',
+                  borderBottom: i < thoughts.length - 1 ? '1px solid rgba(42,40,36,0.06)' : 'none',
+                }}
+              >
+                <div className="flex items-center gap-3 flex-1 min-w-0">
+                  <h3
+                    className="font-serif text-[17px] font-normal leading-[1.3] group-hover:text-ocean transition-colors duration-150 whitespace-nowrap overflow-hidden text-ellipsis"
+                    style={{ color: '#2A2824' }}
+                  >
+                    {t.title}
+                  </h3>
+                  <span
+                    className="font-pixel inline-block leading-[1.4]"
+                    style={{
+                      fontSize: 9,
+                      letterSpacing: '0.03em',
+                      padding: '3px 8px',
+                      borderRadius: 3,
+                      ...catStyle,
+                    }}
+                  >
+                    {t.category}
+                  </span>
+                </div>
+                <div className="flex items-center gap-2 flex-shrink-0">
+                  <PixelBadge variant="count">
+                    {reactionTotals[t.id] || 0} ♡
+                  </PixelBadge>
+                </div>
+              </a>
+            );
+          })}
         </div>
         <a
-          href="#"
+          href="/thoughts"
           className="inline-flex items-center gap-1.5 font-pixel text-ocean"
           style={{ fontSize: 10, marginTop: 18 }}
         >

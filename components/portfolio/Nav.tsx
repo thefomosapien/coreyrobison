@@ -4,18 +4,29 @@ import { useState, useEffect } from 'react';
 
 interface NavProps {
   name: string;
+  currentPage?: 'home' | 'thoughts' | 'thought-detail';
 }
 
-const NAV_LINKS: [string, string][] = [
-  ['Work', '#work'],
-  ['Thoughts', '#thoughts'],
-  ['Journey', '#journey'],
-  ['About', '#about'],
-  ['Contact', '#contact'],
-];
+function getNavLinks(currentPage?: string): [string, string][] {
+  if (currentPage === 'home') {
+    return [
+      ['Work', '#work'],
+      ['Thoughts', '/thoughts'],
+      ['Journey', '#journey'],
+      ['About', '#about'],
+      ['Contact', '#contact'],
+    ];
+  }
+  return [
+    ['Home', '/'],
+    ['Thoughts', '/thoughts'],
+    ['Contact', '/#contact'],
+  ];
+}
 
-export default function Nav({ name }: NavProps) {
+export default function Nav({ name, currentPage = 'home' }: NavProps) {
   const [menuOpen, setMenuOpen] = useState(false);
+  const NAV_LINKS = getNavLinks(currentPage);
 
   useEffect(() => {
     if (menuOpen) {
@@ -34,12 +45,12 @@ export default function Nav({ name }: NavProps) {
         className="max-w-content mx-auto flex justify-between items-center relative z-10"
         style={{ padding: '24px 24px 16px' }}
       >
-        <a href="#" className="font-serif" style={{ fontSize: 17, color: '#2A2824' }}>
+        <a href="/" className="font-serif" style={{ fontSize: 17, color: '#2A2824' }}>
           {name}
         </a>
 
         {/* Desktop links */}
-        <div className="hidden tablet:flex gap-5 font-pixel" style={{ fontSize: 10, color: '#A09A92' }}>
+        <div className="hidden tablet:flex gap-5 font-pixel" style={{ fontSize: 10, color: '#7A7570' }}>
           {NAV_LINKS.map(([label, href]) => (
             <a
               key={label}

@@ -7,6 +7,7 @@ export interface SiteSettings {
   company_badge_url: string;
   bio_paragraphs: string[];
   photo_url: string | null;
+  photo_alt_url: string | null;
   about_headline: string;
   about_paragraphs: string[];
   contact_headline: string;

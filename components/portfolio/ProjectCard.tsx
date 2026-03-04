@@ -36,7 +36,7 @@ export default function ProjectCard({ project, reactions }: ProjectCardProps) {
           >
             {project.name}
           </h3>
-          <p style={{ fontSize: 14, lineHeight: 1.65, color: '#6B6660', marginBottom: 14, maxWidth: '44ch' }}>
+          <p style={{ fontSize: 15, lineHeight: 1.75, color: '#5A5550', marginBottom: 14, maxWidth: '44ch' }}>
             {project.description}
           </p>
           <div className="flex flex-wrap gap-1.5" style={{ marginBottom: 4 }}>

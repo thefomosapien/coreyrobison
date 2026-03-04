@@ -3,13 +3,13 @@
 @tailwind utilities;
 
 :root {
-  --bg: #FAF8F4;
+  --bg: #FDFCFA;
   --bg-alt: #F0EDE6;
   --bg-surface: #F5F0E8;
   --ink: #2A2824;
-  --ink-light: #6B6660;
-  --ink-muted: #A09A92;
-  --ink-faint: #B5AFA5;
+  --ink-light: #5A5550;
+  --ink-muted: #7A7570;
+  --ink-faint: #7A7570;
   --ink-ghost: #C4BDB4;
   --ocean: #5A8A9A;
   --ocean-dark: #3D6E7A;
@@ -24,6 +24,8 @@ html {
 body {
   background: var(--bg);
   color: var(--ink);
+  font-size: 16px;
+  line-height: 1.75;
   -webkit-font-smoothing: antialiased;
   overflow-x: hidden;
 }
@@ -45,11 +47,6 @@ body {
   transform: translateY(0);
 }
 
-@keyframes gentleWave {
-  0%, 100% { transform: translateX(0); }
-  50% { transform: translateX(-12px); }
-}
-
 /* Status dot pulse for healthy projects */
 @keyframes pulseDot {
   0%, 100% { opacity: 1; }
@@ -59,3 +56,26 @@ body {
 .animate-pulse-dot {
   animation: pulseDot 2s ease-in-out infinite;
 }
+
+/* Syntax highlighting theme for code blocks (warm light) */
+.hljs {
+  background: #FAF8F4 !important;
+  color: #2A2824;
+  padding: 1.25rem !important;
+  border-radius: 8px;
+  border: 1px solid rgba(42,40,36,0.08);
+  font-size: 14px;
+  line-height: 1.6;
+  overflow-x: auto;
+}
+.hljs-keyword,
+.hljs-selector-tag { color: #5A2A7A; }
+.hljs-string,
+.hljs-attr { color: #7A5A2A; }
+.hljs-comment { color: #7A7570; font-style: italic; }
+.hljs-function,
+.hljs-title { color: #2A6070; }
+.hljs-number { color: #8A3A20; }
+.hljs-built_in { color: #3D6E5C; }
+.hljs-variable,
+.hljs-template-variable { color: #5A8A9A; }

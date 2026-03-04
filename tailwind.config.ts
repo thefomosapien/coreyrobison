@@ -19,15 +19,15 @@ const config: Config = {
     extend: {
       colors: {
         bg: {
-          DEFAULT: '#FAF8F4',
+          DEFAULT: '#FDFCFA',
           alt: '#F0EDE6',
           surface: '#F5F0E8',
         },
         ink: {
           DEFAULT: '#2A2824',
-          light: '#6B6660',
-          muted: '#A09A92',
-          faint: '#B5AFA5',
+          light: '#5A5550',
+          muted: '#7A7570',
+          faint: '#7A7570',
           ghost: '#C4BDB4',
         },
         ocean: {

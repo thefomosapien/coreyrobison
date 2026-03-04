@@ -214,9 +214,13 @@ export default function ThoughtsPage() {
             <textarea
               value={editing.body || ''}
               onChange={(e) => { setEditing({ ...editing, body: e.target.value }); setDirty(true); }}
-              rows={12}
+              rows={20}
               className="w-full px-3 py-2 rounded-lg border border-ink/10 bg-bg text-sm font-mono focus:outline-none focus:ring-2 focus:ring-ocean/30 focus:border-ocean transition resize-y"
+              style={{ minHeight: 300 }}
             />
+            <p className="text-xs text-ink-muted mt-1.5">
+              Supports Markdown + :::tip / :::note / :::warning callouts
+            </p>
           </div>
           <label className="flex items-center gap-2 text-sm">
             <input

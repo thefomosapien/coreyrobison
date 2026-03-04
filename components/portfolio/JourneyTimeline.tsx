@@ -24,7 +24,7 @@ export default function JourneyTimeline({ items }: JourneyTimelineProps) {
             className="grid grid-cols-[80px_1fr] tablet:grid-cols-[130px_1fr]"
             style={{ paddingBottom: 20 }}
           >
-            <div className="font-pixel" style={{ fontSize: 9, color: '#B5AFA5', paddingTop: 4, paddingRight: 20 }}>
+            <div className="font-sans font-medium" style={{ fontSize: 13, color: '#7A7570', paddingTop: 4, paddingRight: 20 }}>
               {item.year_label}
             </div>
             <div
@@ -36,8 +36,8 @@ export default function JourneyTimeline({ items }: JourneyTimelineProps) {
               <h3 className="font-serif font-normal" style={{ fontSize: 18, color: '#2A2824', marginBottom: 2, lineHeight: 1.3 }}>
                 {item.role}
               </h3>
-              <div style={{ fontSize: 14, color: '#6B6660', marginBottom: 5 }}>{item.company}</div>
-              <div style={{ fontSize: 13, color: '#A09A92', fontStyle: 'italic', lineHeight: 1.55 }}>{item.note}</div>
+              <div style={{ fontSize: 14, color: '#5A5550', marginBottom: 5 }}>{item.company}</div>
+              <div style={{ fontSize: 14, color: '#7A7570', fontStyle: 'italic', lineHeight: 1.65 }}>{item.note}</div>
             </div>
           </div>
         ))}
