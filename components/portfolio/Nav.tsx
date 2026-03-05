@@ -84,6 +84,20 @@ export default function Nav({ name, currentPage = 'home' }: NavProps) {
       {/* Mobile menu overlay */}
       {menuOpen && (
         <div className="fixed inset-0 z-[99] bg-bg flex flex-col items-center justify-center gap-8 tablet:hidden">
+          <button
+            className="absolute top-6 right-6 flex flex-col justify-center items-center w-10 h-10 gap-[5px]"
+            onClick={() => setMenuOpen(false)}
+            aria-label="Close menu"
+          >
+            <span
+              className="block w-5 h-[2px] bg-ink rounded-full origin-center"
+              style={{ transform: 'translateY(3.5px) rotate(45deg)' }}
+            />
+            <span
+              className="block w-5 h-[2px] bg-ink rounded-full origin-center"
+              style={{ transform: 'translateY(-3.5px) rotate(-45deg)' }}
+            />
+          </button>
           {NAV_LINKS.map(([label, href]) => (
             <a
               key={label}

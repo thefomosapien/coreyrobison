@@ -97,29 +97,34 @@ export default function Hero({ settings }: HeroProps) {
     <section aria-label="Introduction" style={{ paddingTop: 40, paddingBottom: 56 }}>
       <div className="flex gap-10 items-start flex-col tablet:flex-row">
         <div className="flex-1">
-          <h1
-            className="font-serif font-normal"
-            style={{
-              fontSize: 'clamp(2rem, 4.2vw, 2.7rem)',
-              lineHeight: 1.2,
-              letterSpacing: '-0.02em',
-              color: '#2A2824',
-              marginBottom: 8,
-            }}
-          >
-            {renderHeadline(settings.headline)}
-          </h1>
+          {/* On mobile: H1 + small photo side by side */}
+          <div className="flex tablet:block items-start gap-4" style={{ marginBottom: 8 }}>
+            <h1
+              className="font-serif font-normal flex-1"
+              style={{
+                fontSize: 'clamp(2rem, 4.2vw, 2.7rem)',
+                lineHeight: 1.2,
+                letterSpacing: '-0.02em',
+                color: '#2A2824',
+              }}
+            >
+              {renderHeadline(settings.headline)}
+            </h1>
+            {/* Mobile-only inline photo, matched to headline height */}
+            <PhotoBlock
+              settings={settings}
+              className="flex tablet:hidden"
+              width={72}
+              aspectRatio="3/4"
+              borderRadius={8}
+            />
+          </div>
 
           {settings.company_badge_text && (
             <div style={{ marginBottom: 24 }}>
               <CompanyBadge text={settings.company_badge_text} url={settings.company_badge_url} />
             </div>
           )}
-
-          {/* Mobile photo */}
-          <div className="flex tablet:hidden justify-center" style={{ marginBottom: 24 }}>
-            <PhotoBlock settings={settings} width={120} aspectRatio="3/4" borderRadius={10} />
-          </div>
 
           <div
             className="flex flex-col gap-3"
