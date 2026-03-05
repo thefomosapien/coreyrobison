@@ -28,6 +28,8 @@ export interface Project {
   visual_type: 'rebrand' | 'card' | 'marketplace' | 'brand-system' | 'historia' | 'duhbate' | 'custom';
   visual_bg_color: string | null;
   thumbnail_url: string | null;
+  video_url: string | null;
+  media_type: 'image' | 'video';
   sort_order: number;
   is_visible: boolean;
   created_at: string;

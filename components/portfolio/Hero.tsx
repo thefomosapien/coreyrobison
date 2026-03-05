@@ -9,14 +9,24 @@ interface HeroProps {
 }
 
 function renderHeadline(text: string) {
-  const parts = text.split(/\*([^*]+)\*/);
-  return parts.map((part, i) =>
-    i % 2 === 1 ? (
-      <span key={i} style={{ color: '#5A8A9A' }}>{part}</span>
-    ) : (
-      <span key={i}>{part}</span>
-    )
-  );
+  // Split on newlines first to support multi-line headlines
+  const lines = text.split('\n');
+  return lines.map((line, lineIdx) => {
+    const parts = line.split(/\*([^*]+)\*/);
+    const rendered = parts.map((part, i) =>
+      i % 2 === 1 ? (
+        <span key={`${lineIdx}-${i}`} style={{ color: '#5A8A9A' }}>{part}</span>
+      ) : (
+        <span key={`${lineIdx}-${i}`}>{part}</span>
+      )
+    );
+    return (
+      <span key={lineIdx}>
+        {lineIdx > 0 && <br />}
+        {rendered}
+      </span>
+    );
+  });
 }
 
 function PhotoBlock({ settings, className, width, aspectRatio, borderRadius }: {
