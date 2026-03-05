@@ -43,7 +43,7 @@ function PhotoBlock({ settings, className, width, aspectRatio, borderRadius }: {
 
   return (
     <div
-      className={className}
+      className={`items-center justify-center ${className || ''}`}
       style={{
         width,
         minWidth: width,
@@ -55,9 +55,6 @@ function PhotoBlock({ settings, className, width, aspectRatio, borderRadius }: {
         background: currentUrl
           ? undefined
           : 'linear-gradient(135deg, #D4DFE6 0%, #C8D4DA 100%)',
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center',
         cursor: settings.photo_url ? 'pointer' : 'default',
         transition: 'transform 0.2s ease',
         transform: hinted ? 'scale(1.03) rotate(1deg)' : 'scale(1)',
