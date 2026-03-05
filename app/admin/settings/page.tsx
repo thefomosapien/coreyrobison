@@ -66,7 +66,7 @@ export default function SettingsPage() {
 
     setSaving(false);
     if (error) {
-      showToast('Failed to save settings', 'error');
+      showToast(`Failed to save settings: ${error.message}`, 'error');
     } else {
       showToast('Settings saved successfully');
       setDirty(false);
