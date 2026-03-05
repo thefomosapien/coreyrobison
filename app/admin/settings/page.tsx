@@ -97,9 +97,10 @@ export default function SettingsPage() {
           <Field label="Name" value={settings.name} onChange={(v) => updateField('name', v)} />
           <Field label="Title" value={settings.title} onChange={(v) => updateField('title', v)} />
           <Field
-            label="Headline (supports HTML for italic)"
+            label="Headline (use *text* for teal, newlines for line breaks)"
             value={settings.headline}
             onChange={(v) => updateField('headline', v)}
+            multiline
           />
         </Section>
 

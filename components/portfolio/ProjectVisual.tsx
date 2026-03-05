@@ -262,6 +262,20 @@ function VisDuhbate() {
 }
 
 function CustomVisual({ project }: { project: Project }) {
+  if (project.media_type === 'video' && project.video_url) {
+    return (
+      <div className="w-full h-full overflow-hidden" style={{ borderRadius: 10 }}>
+        <video
+          src={project.video_url}
+          className="w-full h-full object-cover"
+          autoPlay
+          loop
+          muted
+          playsInline
+        />
+      </div>
+    );
+  }
   if (project.thumbnail_url) {
     return (
       <div className="w-full h-full overflow-hidden" style={{ borderRadius: 10 }}>

@@ -15,6 +15,8 @@ const emptyProject: Omit<Project, 'id' | 'created_at' | 'updated_at'> = {
   visual_type: 'custom',
   visual_bg_color: null,
   thumbnail_url: null,
+  video_url: null,
+  media_type: 'image',
   sort_order: 0,
   is_visible: true,
 };
@@ -85,6 +87,8 @@ export default function ProjectsPage() {
       visual_type: editing.visual_type,
       visual_bg_color: editing.visual_bg_color || null,
       thumbnail_url: editing.thumbnail_url || null,
+      video_url: editing.video_url || null,
+      media_type: editing.media_type,
       sort_order: editing.sort_order,
       is_visible: editing.is_visible,
     };
@@ -134,7 +138,7 @@ export default function ProjectsPage() {
     }
   }
 
-  async function handleImageUpload(e: React.ChangeEvent<HTMLInputElement>) {
+  async function handleMediaUpload(e: React.ChangeEvent<HTMLInputElement>, type: 'image' | 'video') {
     if (!e.target.files?.length || !editing) return;
     const file = e.target.files[0];
     const supabase = createClient();
@@ -148,9 +152,13 @@ export default function ProjectsPage() {
     }
 
     const { data: urlData } = supabase.storage.from('project-images').getPublicUrl(path);
-    setEditing({ ...editing, thumbnail_url: urlData.publicUrl });
+    if (type === 'video') {
+      setEditing({ ...editing, video_url: urlData.publicUrl, media_type: 'video' });
+    } else {
+      setEditing({ ...editing, thumbnail_url: urlData.publicUrl, media_type: 'image' });
+    }
     setDirty(true);
-    showToast('Image uploaded');
+    showToast(`${type === 'video' ? 'Video' : 'Image'} uploaded`);
   }
 
   if (loading) return <div className="text-ink-muted">Loading...</div>;
@@ -226,20 +234,83 @@ export default function ProjectsPage() {
             />
           </div>
 
-          {editing.visual_type === 'custom' && (
-            <div>
-              <label className="block text-xs font-medium tracking-wider uppercase text-ink-muted mb-1.5">
-                Thumbnail Image
+          <div>
+            <label className="block text-xs font-medium tracking-wider uppercase text-ink-muted mb-1.5">
+              Media Type
+            </label>
+            <div className="flex gap-3 mb-3">
+              <label className="flex items-center gap-1.5 text-sm">
+                <input
+                  type="radio"
+                  name="media_type"
+                  value="image"
+                  checked={editing.media_type === 'image'}
+                  onChange={() => { setEditing({ ...editing, media_type: 'image' }); setDirty(true); }}
+                />
+                Image
               </label>
-              <input type="file" accept="image/*" onChange={handleImageUpload} className="text-sm" />
-              {editing.thumbnail_url && (
-                <div className="mt-2">
-                  {/* eslint-disable-next-line @next/next/no-img-element */}
-                  <img src={editing.thumbnail_url} alt="Preview" className="h-24 rounded-lg object-cover" />
-                </div>
-              )}
+              <label className="flex items-center gap-1.5 text-sm">
+                <input
+                  type="radio"
+                  name="media_type"
+                  value="video"
+                  checked={editing.media_type === 'video'}
+                  onChange={() => { setEditing({ ...editing, media_type: 'video' }); setDirty(true); }}
+                />
+                Video
+              </label>
             </div>
-          )}
+
+            {editing.media_type === 'image' && (
+              <div>
+                <label className="block text-xs font-medium tracking-wider uppercase text-ink-muted mb-1.5">
+                  Thumbnail Image
+                </label>
+                <input type="file" accept="image/*" onChange={(e) => handleMediaUpload(e, 'image')} className="text-sm" />
+                {editing.thumbnail_url && (
+                  <div className="mt-2 relative inline-block">
+                    {/* eslint-disable-next-line @next/next/no-img-element */}
+                    <img src={editing.thumbnail_url} alt="Preview" className="h-24 rounded-lg object-cover" />
+                    <button
+                      type="button"
+                      onClick={() => { setEditing({ ...editing, thumbnail_url: null }); setDirty(true); }}
+                      className="absolute -top-2 -right-2 w-5 h-5 rounded-full bg-red-500 text-white text-xs flex items-center justify-center hover:bg-red-600"
+                    >
+                      x
+                    </button>
+                  </div>
+                )}
+              </div>
+            )}
+
+            {editing.media_type === 'video' && (
+              <div className="space-y-3">
+                <div>
+                  <label className="block text-xs font-medium tracking-wider uppercase text-ink-muted mb-1.5">
+                    Video File
+                  </label>
+                  <input type="file" accept="video/*" onChange={(e) => handleMediaUpload(e, 'video')} className="text-sm" />
+                </div>
+                <InputField
+                  label="Or Video URL"
+                  value={editing.video_url || ''}
+                  onChange={(v) => { setEditing({ ...editing, video_url: v || null }); setDirty(true); }}
+                />
+                {editing.video_url && (
+                  <div className="mt-2 relative inline-block">
+                    <video src={editing.video_url} className="h-24 rounded-lg" muted />
+                    <button
+                      type="button"
+                      onClick={() => { setEditing({ ...editing, video_url: null }); setDirty(true); }}
+                      className="absolute -top-2 -right-2 w-5 h-5 rounded-full bg-red-500 text-white text-xs flex items-center justify-center hover:bg-red-600"
+                    >
+                      x
+                    </button>
+                  </div>
+                )}
+              </div>
+            )}
+          </div>
 
           <label className="flex items-center gap-2 text-sm">
             <input
