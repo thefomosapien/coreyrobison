@@ -295,6 +295,22 @@ function CustomVisual({ project }: { project: Project }) {
 }
 
 export default function ProjectVisual({ project }: ProjectVisualProps) {
+  // Video media takes priority over hardcoded visual types
+  if (project.media_type === 'video' && project.video_url) {
+    return (
+      <div className="w-full h-full overflow-hidden" style={{ borderRadius: 10 }}>
+        <video
+          src={project.video_url}
+          className="w-full h-full object-cover"
+          autoPlay
+          loop
+          muted
+          playsInline
+        />
+      </div>
+    );
+  }
+
   const map: Record<string, JSX.Element> = {
     rebrand: <VisRebrand />,
     card: <VisCard />,
