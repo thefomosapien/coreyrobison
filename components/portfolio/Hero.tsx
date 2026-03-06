@@ -156,7 +156,7 @@ export default function Hero({ settings }: HeroProps) {
             aspectRatio="16/9"
             borderRadius={10}
             fullWidth
-            objectPosition="center 80%"
+            objectPosition="center 60%"
             priority
           />
         </div>
