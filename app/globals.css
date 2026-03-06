@@ -6,11 +6,11 @@
   --bg: #FDFCFA;
   --bg-alt: #F0EDE6;
   --bg-surface: #F5F0E8;
-  --ink: #2A2824;
-  --ink-light: #5A5550;
-  --ink-muted: #7A7570;
-  --ink-faint: #7A7570;
-  --ink-ghost: #C4BDB4;
+  --ink: #1E1C19;
+  --ink-light: #4A4540;
+  --ink-muted: #6B6560;
+  --ink-faint: #6B6560;
+  --ink-ghost: #8A8480;
   --ocean: #5A8A9A;
   --ocean-dark: #3D6E7A;
   --sand: #C68C5A;
@@ -25,14 +25,14 @@ body {
   background: var(--bg);
   color: var(--ink);
   font-size: 16px;
-  line-height: 1.75;
+  line-height: 1.85;
   -webkit-font-smoothing: antialiased;
   overflow-x: hidden;
 }
 
 ::selection {
   background: rgba(90, 138, 154, 0.2);
-  color: #2A2824;
+  color: #1E1C19;
 }
 
 /* Scroll reveal base */
@@ -60,7 +60,7 @@ body {
 /* Syntax highlighting theme for code blocks (warm light) */
 .hljs {
   background: #FAF8F4 !important;
-  color: #2A2824;
+  color: #1E1C19;
   padding: 1.25rem !important;
   border-radius: 8px;
   border: 1px solid rgba(42,40,36,0.08);
@@ -72,7 +72,7 @@ body {
 .hljs-selector-tag { color: #5A2A7A; }
 .hljs-string,
 .hljs-attr { color: #7A5A2A; }
-.hljs-comment { color: #7A7570; font-style: italic; }
+.hljs-comment { color: #6B6560; font-style: italic; }
 .hljs-function,
 .hljs-title { color: #2A6070; }
 .hljs-number { color: #8A3A20; }

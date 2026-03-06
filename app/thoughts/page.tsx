@@ -33,15 +33,15 @@ export default async function ThoughtsPage() {
   const { thoughts, siteName } = await getData();
 
   return (
-    <div className="min-h-screen relative" style={{ background: '#FDFCFA', color: '#2A2824' }}>
+    <div className="min-h-screen relative" style={{ background: '#FDFCFA', color: '#1E1C19' }}>
       <BackgroundAmbiance />
       <Nav name={siteName} currentPage="thoughts" />
       <main className="max-w-content mx-auto px-6 relative z-[5]" style={{ paddingTop: 24, paddingBottom: 80 }}>
         <header style={{ marginBottom: 40 }}>
-          <h1 className="font-serif font-normal" style={{ fontSize: 28, lineHeight: 1.2, color: '#2A2824', marginBottom: 8 }}>
+          <h1 className="font-serif font-semibold" style={{ fontSize: 28, lineHeight: 1.15, letterSpacing: '-0.02em', color: '#1E1C19', marginBottom: 8 }}>
             Thoughts on product, design & AI.
           </h1>
-          <p style={{ fontSize: 16, color: '#5A5550', lineHeight: 1.75 }}>
+          <p style={{ fontSize: 16, color: '#4A4540', lineHeight: 1.85 }}>
             Things I&apos;ve learned, observed, and can&apos;t stop thinking about.
           </p>
         </header>

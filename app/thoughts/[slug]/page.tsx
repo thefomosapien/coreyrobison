@@ -60,7 +60,7 @@ export default async function ThoughtPage({ params }: PageProps) {
   if (!thought) notFound();
 
   return (
-    <div className="min-h-screen relative" style={{ background: '#FDFCFA', color: '#2A2824' }}>
+    <div className="min-h-screen relative" style={{ background: '#FDFCFA', color: '#1E1C19' }}>
       <BackgroundAmbiance />
       <Nav name={siteName} currentPage="thought-detail" />
       <ThoughtContent thought={thought} reactions={reactions} relatedThoughts={relatedThoughts} />

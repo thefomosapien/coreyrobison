@@ -79,7 +79,7 @@ export default async function Home() {
   thoughts.forEach((t) => { thoughtReactionTotals[t.id] = getTotalReactions(reactions, t.id); });
 
   return (
-    <div className="min-h-screen relative" style={{ background: '#FDFCFA', color: '#2A2824' }}>
+    <div className="min-h-screen relative" style={{ background: '#FDFCFA', color: '#1E1C19' }}>
       {/* Skip to content */}
       <a
         href="#main-content"
@@ -105,10 +105,10 @@ export default async function Home() {
           style={{ paddingTop: 48, paddingBottom: 48, borderTop: '1px solid rgba(42,40,36,0.08)' }}
         >
           <ScrollReveal>
-            <h2 className="font-serif text-[20px] font-normal" style={{ color: '#2A2824', marginBottom: 6 }}>
+            <h2 className="font-serif font-semibold" style={{ fontSize: '1.4rem', lineHeight: 1.2, letterSpacing: '-.015em', color: '#1E1C19', marginBottom: 6 }}>
               Selected work
             </h2>
-            <p style={{ fontSize: 14, color: '#7A7570', marginBottom: 32, lineHeight: 1.75 }}>
+            <p style={{ fontSize: 14, color: '#6B6560', marginBottom: 32, lineHeight: 1.85 }}>
               9 years at one company. Hundreds of shipped products. Here&apos;s the highlight reel.
             </p>
           </ScrollReveal>

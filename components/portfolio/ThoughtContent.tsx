@@ -57,10 +57,10 @@ function CalloutBox({ type, children }: { type: string; children: React.ReactNod
         margin: '24px 0',
       }}
     >
-      <div className="font-sans font-medium" style={{ fontSize: 13, color: config.borderColor, marginBottom: 6 }}>
+      <div className="font-sans font-medium" style={{ fontSize: 14, color: config.borderColor, marginBottom: 6 }}>
         {config.label}
       </div>
-      <div style={{ fontSize: 15, lineHeight: 1.75, color: '#2A2824' }}>{children}</div>
+      <div style={{ fontSize: 16, lineHeight: 1.85, color: '#1E1C19' }}>{children}</div>
     </div>
   );
 }
@@ -93,7 +93,7 @@ function ShareBlock({ thought }: { thought: Thought }) {
 
   return (
     <div style={{ borderTop: '1px solid rgba(42,40,36,0.08)', marginTop: 48, paddingTop: 28 }}>
-      <p className="font-sans font-medium" style={{ fontSize: 15, color: '#2A2824', marginBottom: 14 }}>
+      <p className="font-sans font-medium" style={{ fontSize: 15, color: '#1E1C19', marginBottom: 14 }}>
         Share with friends
       </p>
       <div className="flex flex-wrap gap-3">
@@ -101,12 +101,12 @@ function ShareBlock({ thought }: { thought: Thought }) {
           onClick={handleCopy}
           className="font-sans font-medium transition-all duration-200"
           style={{
-            fontSize: 13,
+            fontSize: 14,
             padding: '8px 16px',
             borderRadius: 8,
             border: '1px solid rgba(42,40,36,0.1)',
             background: copied ? 'rgba(61,110,92,0.08)' : 'transparent',
-            color: copied ? '#3D6E5C' : '#5A5550',
+            color: copied ? '#3D6E5C' : '#4A4540',
             cursor: 'pointer',
           }}
         >
@@ -118,11 +118,11 @@ function ShareBlock({ thought }: { thought: Thought }) {
           rel="noopener noreferrer"
           className="font-sans font-medium transition-all duration-200"
           style={{
-            fontSize: 13,
+            fontSize: 14,
             padding: '8px 16px',
             borderRadius: 8,
             border: '1px solid rgba(42,40,36,0.1)',
-            color: '#5A5550',
+            color: '#4A4540',
             textDecoration: 'none',
           }}
         >
@@ -134,11 +134,11 @@ function ShareBlock({ thought }: { thought: Thought }) {
           rel="noopener noreferrer"
           className="font-sans font-medium transition-all duration-200"
           style={{
-            fontSize: 13,
+            fontSize: 14,
             padding: '8px 16px',
             borderRadius: 8,
             border: '1px solid rgba(42,40,36,0.1)',
-            color: '#5A5550',
+            color: '#4A4540',
             textDecoration: 'none',
           }}
         >
@@ -153,7 +153,7 @@ function ReadMore({ thoughts }: { thoughts: { slug: string; title: string; categ
   if (!thoughts.length) return null;
   return (
     <div style={{ borderTop: '1px solid rgba(42,40,36,0.08)', marginTop: 36, paddingTop: 28 }}>
-      <p className="font-sans font-medium" style={{ fontSize: 15, color: '#2A2824', marginBottom: 14 }}>
+      <p className="font-sans font-medium" style={{ fontSize: 15, color: '#1E1C19', marginBottom: 14 }}>
         Read more
       </p>
       <div className="flex flex-col gap-3">
@@ -168,7 +168,7 @@ function ReadMore({ thoughts }: { thoughts: { slug: string; title: string; categ
             >
               <span
                 className="font-serif text-[16px] group-hover:text-ocean transition-colors duration-150"
-                style={{ color: '#2A2824' }}
+                style={{ color: '#1E1C19' }}
               >
                 {t.title}
               </span>
@@ -220,7 +220,7 @@ function TableOfContents({ headings }: { headings: { id: string; text: string }[
         flexShrink: 0,
       }}
     >
-      <div className="font-pixel uppercase" style={{ fontSize: 9, color: '#7A7570', marginBottom: 12 }}>
+      <div className="font-pixel uppercase" style={{ fontSize: 10, color: '#6B6560', marginBottom: 12, letterSpacing: '0.08em' }}>
         Contents
       </div>
       <div className="flex flex-col gap-2">
@@ -230,9 +230,9 @@ function TableOfContents({ headings }: { headings: { id: string; text: string }[
             href={`#${id}`}
             className="font-sans transition-colors duration-150"
             style={{
-              fontSize: 13,
+              fontSize: 14,
               lineHeight: 1.4,
-              color: activeId === id ? '#5A8A9A' : '#7A7570',
+              color: activeId === id ? '#5A8A9A' : '#6B6560',
               fontWeight: activeId === id ? 500 : 400,
               textDecoration: 'none',
               borderLeft: activeId === id ? '2px solid #5A8A9A' : '2px solid transparent',
@@ -276,13 +276,13 @@ export default function ThoughtContent({ thought, reactions, relatedThoughts = [
           </span>
         </div>
         <h1
-          className="font-serif font-normal"
-          style={{ fontSize: 32, lineHeight: 1.2, color: '#2A2824' }}
+          className="font-serif font-semibold"
+          style={{ fontSize: 32, lineHeight: 1.15, letterSpacing: '-0.02em', color: '#1E1C19' }}
         >
           {thought.title}
         </h1>
         {thought.excerpt && (
-          <p style={{ fontSize: 16, color: '#5A5550', lineHeight: 1.75, marginTop: 14 }}>
+          <p style={{ fontSize: 16, color: '#4A4540', lineHeight: 1.85, marginTop: 14 }}>
             {thought.excerpt}
           </p>
         )}
@@ -297,14 +297,14 @@ export default function ThoughtContent({ thought, reactions, relatedThoughts = [
           {processedBody ? (
             <MarkdownBody content={processedBody} />
           ) : (
-            <p style={{ fontSize: 16, color: '#7A7570', fontStyle: 'italic' }}>
+            <p style={{ fontSize: 16, color: '#6B6560', fontStyle: 'italic' }}>
               This thought doesn&apos;t have a body yet.
             </p>
           )}
 
           {/* Reactions */}
           <div style={{ marginTop: 48, borderTop: '1px solid rgba(42,40,36,0.08)', paddingTop: 24 }}>
-            <p className="font-pixel" style={{ fontSize: 10, color: '#7A7570', marginBottom: 4 }}>
+            <p className="font-pixel" style={{ fontSize: 10, color: '#6B6560', marginBottom: 4 }}>
               What did you think?
             </p>
             <Reactions targetType="thought" targetId={thought.id} initialReactions={reactions} />
@@ -355,7 +355,7 @@ function MarkdownBody({ content }: { content: string }) {
               rehypePlugins={[rehypeHighlight]}
               components={{
                 h1: ({ children }) => (
-                  <h1 className="font-serif font-normal" style={{ fontSize: 28, color: '#2A2824', marginTop: 40, marginBottom: 16, lineHeight: 1.2 }}>
+                  <h1 className="font-serif font-semibold" style={{ fontSize: 28, color: '#1E1C19', marginTop: 40, marginBottom: 16, lineHeight: 1.15, letterSpacing: '-0.02em' }}>
                     {children}
                   </h1>
                 ),
@@ -363,23 +363,23 @@ function MarkdownBody({ content }: { content: string }) {
                   const text = String(children);
                   const id = text.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '');
                   return (
-                    <h2 id={id} className="font-serif font-normal" style={{ fontSize: 22, color: '#2A2824', marginTop: 40, marginBottom: 14, lineHeight: 1.25 }}>
+                    <h2 id={id} className="font-serif font-semibold" style={{ fontSize: '1.4rem', color: '#1E1C19', marginTop: 40, marginBottom: 14, lineHeight: 1.2, letterSpacing: '-0.015em' }}>
                       {children}
                     </h2>
                   );
                 },
                 h3: ({ children }) => (
-                  <h3 className="font-serif font-normal" style={{ fontSize: 18, color: '#2A2824', marginTop: 32, marginBottom: 12, lineHeight: 1.3 }}>
+                  <h3 className="font-serif font-medium" style={{ fontSize: 18, color: '#1E1C19', marginTop: 32, marginBottom: 12, lineHeight: 1.3 }}>
                     {children}
                   </h3>
                 ),
                 h4: ({ children }) => (
-                  <h4 className="font-sans font-semibold" style={{ fontSize: 16, color: '#2A2824', marginTop: 28, marginBottom: 10 }}>
+                  <h4 className="font-serif font-medium" style={{ fontSize: 16, color: '#1E1C19', marginTop: 28, marginBottom: 10 }}>
                     {children}
                   </h4>
                 ),
                 p: ({ children }) => (
-                  <p style={{ fontSize: 16, lineHeight: 1.75, color: '#2A2824', marginBottom: 18 }}>
+                  <p style={{ fontSize: 16, lineHeight: 1.85, color: '#1E1C19', marginBottom: 18 }}>
                     {children}
                   </p>
                 ),
@@ -388,7 +388,7 @@ function MarkdownBody({ content }: { content: string }) {
                     borderLeft: '3px solid rgba(90,138,154,0.3)',
                     paddingLeft: 16,
                     margin: '20px 0',
-                    color: '#5A5550',
+                    color: '#4A4540',
                     fontStyle: 'italic',
                   }}>
                     {children}
@@ -401,7 +401,7 @@ function MarkdownBody({ content }: { content: string }) {
                   <ol style={{ margin: '16px 0', paddingLeft: 20, listStyleType: 'decimal' }}>{children}</ol>
                 ),
                 li: ({ children }) => (
-                  <li style={{ fontSize: 16, lineHeight: 1.75, color: '#2A2824', marginBottom: 6 }}>{children}</li>
+                  <li style={{ fontSize: 16, lineHeight: 1.85, color: '#1E1C19', marginBottom: 6 }}>{children}</li>
                 ),
                 code: ({ className, children, ...props }) => {
                   const isBlock = className?.includes('language-');
@@ -428,12 +428,12 @@ function MarkdownBody({ content }: { content: string }) {
                   </div>
                 ),
                 th: ({ children }) => (
-                  <th style={{ borderBottom: '2px solid rgba(42,40,36,0.1)', padding: '8px 12px', textAlign: 'left', fontWeight: 600, color: '#2A2824' }}>
+                  <th style={{ borderBottom: '2px solid rgba(42,40,36,0.1)', padding: '8px 12px', textAlign: 'left', fontWeight: 600, color: '#1E1C19' }}>
                     {children}
                   </th>
                 ),
                 td: ({ children }) => (
-                  <td style={{ borderBottom: '1px solid rgba(42,40,36,0.06)', padding: '8px 12px', color: '#5A5550' }}>
+                  <td style={{ borderBottom: '1px solid rgba(42,40,36,0.06)', padding: '8px 12px', color: '#4A4540' }}>
                     {children}
                   </td>
                 ),

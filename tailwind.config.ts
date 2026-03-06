@@ -24,11 +24,11 @@ const config: Config = {
           surface: '#F5F0E8',
         },
         ink: {
-          DEFAULT: '#2A2824',
-          light: '#5A5550',
-          muted: '#7A7570',
-          faint: '#7A7570',
-          ghost: '#C4BDB4',
+          DEFAULT: '#1E1C19',
+          light: '#4A4540',
+          muted: '#6B6560',
+          faint: '#6B6560',
+          ghost: '#8A8480',
         },
         ocean: {
           DEFAULT: '#5A8A9A',
@@ -38,8 +38,8 @@ const config: Config = {
         tide: '#3D6E5C',
       },
       fontFamily: {
-        serif: ['Instrument Serif', 'Georgia', 'serif'],
-        sans: ['Instrument Sans', '-apple-system', 'sans-serif'],
+        serif: ['Noto Serif', 'Georgia', 'serif'],
+        sans: ['Noto Sans', '-apple-system', 'sans-serif'],
         pixel: ['Silkscreen', 'cursive'],
       },
       maxWidth: {

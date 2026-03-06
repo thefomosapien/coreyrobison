@@ -22,8 +22,8 @@ export default function ThoughtsListPage({ thoughts }: ThoughtsListPageProps) {
             }}
           >
             <h2
-              className="font-serif text-[17px] font-normal leading-[1.3] group-hover:text-ocean transition-colors duration-150"
-              style={{ color: '#2A2824' }}
+              className="font-serif text-[17px] font-medium leading-[1.3] group-hover:text-ocean transition-colors duration-150"
+              style={{ color: '#1E1C19' }}
             >
               {t.title}
             </h2>
@@ -43,7 +43,7 @@ export default function ThoughtsListPage({ thoughts }: ThoughtsListPageProps) {
         );
       })}
       {thoughts.length === 0 && (
-        <p style={{ fontSize: 16, color: '#7A7570', fontStyle: 'italic' }}>
+        <p style={{ fontSize: 16, color: '#6B6560', fontStyle: 'italic' }}>
           No thoughts published yet.
         </p>
       )}
