@@ -30,7 +30,7 @@ function renderHeadline(text: string) {
   });
 }
 
-function PhotoBlock({ settings, className, width, aspectRatio, borderRadius, priority, fullWidth }: {
+function PhotoBlock({ settings, className, width, aspectRatio, borderRadius, priority, fullWidth, objectPosition }: {
   settings: SiteSettings;
   className?: string;
   width: number;
@@ -38,6 +38,7 @@ function PhotoBlock({ settings, className, width, aspectRatio, borderRadius, pri
   borderRadius: number;
   priority?: boolean;
   fullWidth?: boolean;
+  objectPosition?: string;
 }) {
   const [showAlt, setShowAlt] = useState(false);
   const [hinted, setHinted] = useState(false);
@@ -86,6 +87,7 @@ function PhotoBlock({ settings, className, width, aspectRatio, borderRadius, pri
           priority={priority}
           style={{
             objectFit: 'cover',
+            objectPosition: objectPosition ?? 'center center',
             transition: 'transform 0.2s ease',
             transform: showAlt ? 'scale(1.02)' : 'scale(1)',
           }}
@@ -106,18 +108,7 @@ function PhotoBlock({ settings, className, width, aspectRatio, borderRadius, pri
 export default function Hero({ settings }: HeroProps) {
   return (
     <section aria-label="Introduction" style={{ paddingTop: 40, paddingBottom: 56 }}>
-      {/* Mobile-only full-width photo above content */}
-      <PhotoBlock
-        settings={settings}
-        className="flex tablet:hidden"
-        width={600}
-        aspectRatio="16/9"
-        borderRadius={10}
-        fullWidth
-        priority
-      />
-
-      <div className="flex gap-10 items-start flex-col tablet:flex-row tablet:mt-0 mt-6">
+      <div className="flex gap-10 items-start flex-col tablet:flex-row">
         {/* Desktop photo — left side */}
         <PhotoBlock
           settings={settings}
@@ -156,6 +147,18 @@ export default function Hero({ settings }: HeroProps) {
               <p key={i}>{p}</p>
             ))}
           </div>
+
+          {/* Mobile-only full-width photo below content */}
+          <PhotoBlock
+            settings={settings}
+            className="flex tablet:hidden"
+            width={600}
+            aspectRatio="16/9"
+            borderRadius={10}
+            fullWidth
+            objectPosition="center 20%"
+            priority
+          />
         </div>
       </div>
     </section>
