@@ -30,13 +30,14 @@ function renderHeadline(text: string) {
   });
 }
 
-function PhotoBlock({ settings, className, width, aspectRatio, borderRadius, priority }: {
+function PhotoBlock({ settings, className, width, aspectRatio, borderRadius, priority, fullWidth }: {
   settings: SiteSettings;
   className?: string;
   width: number;
   aspectRatio: string;
   borderRadius: number;
   priority?: boolean;
+  fullWidth?: boolean;
 }) {
   const [showAlt, setShowAlt] = useState(false);
   const [hinted, setHinted] = useState(false);
@@ -57,8 +58,8 @@ function PhotoBlock({ settings, className, width, aspectRatio, borderRadius, pri
     <div
       className={`items-center justify-center ${className || ''}`}
       style={{
-        width,
-        minWidth: width,
+        width: fullWidth ? '100%' : width,
+        minWidth: fullWidth ? undefined : width,
         aspectRatio,
         borderRadius,
         overflow: 'hidden',
@@ -81,7 +82,7 @@ function PhotoBlock({ settings, className, width, aspectRatio, borderRadius, pri
           src={currentUrl}
           alt={settings.name}
           fill
-          sizes={`${width}px`}
+          sizes={fullWidth ? '100vw' : `${width}px`}
           priority={priority}
           style={{
             objectFit: 'cover',
@@ -105,30 +106,41 @@ function PhotoBlock({ settings, className, width, aspectRatio, borderRadius, pri
 export default function Hero({ settings }: HeroProps) {
   return (
     <section aria-label="Introduction" style={{ paddingTop: 40, paddingBottom: 56 }}>
-      <div className="flex gap-10 items-start flex-col tablet:flex-row">
+      {/* Mobile-only full-width photo above content */}
+      <PhotoBlock
+        settings={settings}
+        className="flex tablet:hidden"
+        width={600}
+        aspectRatio="16/9"
+        borderRadius={10}
+        fullWidth
+        priority
+      />
+
+      <div className="flex gap-10 items-start flex-col tablet:flex-row tablet:mt-0 mt-6">
+        {/* Desktop photo — left side */}
+        <PhotoBlock
+          settings={settings}
+          className="hidden tablet:flex"
+          width={200}
+          aspectRatio="3/4"
+          borderRadius={10}
+          priority
+        />
+
         <div className="flex-1">
-          {/* On mobile: H1 + small photo side by side */}
-          <div className="flex tablet:block items-start gap-4" style={{ marginBottom: 8 }}>
-            <h1
-              className="font-serif font-semibold flex-1"
-              style={{
-                fontSize: 'clamp(2.2rem, 4.5vw, 2.7rem)',
-                lineHeight: 1.15,
-                letterSpacing: '-0.02em',
-                color: '#1E1C19',
-              }}
-            >
-              {renderHeadline(settings.headline)}
-            </h1>
-            {/* Mobile-only inline photo, matched to headline height */}
-            <PhotoBlock
-              settings={settings}
-              className="flex tablet:hidden"
-              width={72}
-              aspectRatio="3/4"
-              borderRadius={8}
-            />
-          </div>
+          <h1
+            className="font-serif font-semibold"
+            style={{
+              fontSize: 'clamp(2.2rem, 4.5vw, 2.7rem)',
+              lineHeight: 1.15,
+              letterSpacing: '-0.02em',
+              color: '#1E1C19',
+              marginBottom: 8,
+            }}
+          >
+            {renderHeadline(settings.headline)}
+          </h1>
 
           {settings.company_badge_text && (
             <div style={{ marginBottom: 24 }}>
@@ -145,16 +157,6 @@ export default function Hero({ settings }: HeroProps) {
             ))}
           </div>
         </div>
-
-        {/* Desktop photo */}
-        <PhotoBlock
-          settings={settings}
-          className="hidden tablet:flex"
-          width={200}
-          aspectRatio="3/4"
-          borderRadius={10}
-          priority
-        />
       </div>
     </section>
   );
