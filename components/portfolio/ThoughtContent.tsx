@@ -390,6 +390,7 @@ function MarkdownBody({ content }: { content: string }) {
                     margin: '20px 0',
                     color: '#4A4540',
                     fontStyle: 'italic',
+                    fontFamily: "'Noto Serif', Georgia, serif",
                   }}>
                     {children}
                   </blockquote>
