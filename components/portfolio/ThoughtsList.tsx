@@ -16,7 +16,7 @@ export default function ThoughtsList({ thoughts, reactionTotals }: ThoughtsListP
       style={{ paddingTop: 40, paddingBottom: 40, borderTop: '1px solid rgba(42,40,36,0.08)' }}
     >
       <ScrollReveal>
-        <h2 className="font-serif text-[20px] font-normal mb-5" style={{ color: '#2A2824' }}>
+        <h2 className="font-serif font-semibold mb-5" style={{ fontSize: '1.4rem', lineHeight: 1.2, letterSpacing: '-0.015em', color: '#1E1C19' }}>
           Latest thoughts
         </h2>
         <div className="flex flex-col">
@@ -34,8 +34,8 @@ export default function ThoughtsList({ thoughts, reactionTotals }: ThoughtsListP
               >
                 <div className="flex items-center gap-3 flex-1 min-w-0">
                   <h3
-                    className="font-serif text-[17px] font-normal leading-[1.3] group-hover:text-ocean transition-colors duration-150 whitespace-nowrap overflow-hidden text-ellipsis"
-                    style={{ color: '#2A2824' }}
+                    className="font-serif text-[17px] font-medium leading-[1.3] group-hover:text-ocean transition-colors duration-150 whitespace-nowrap overflow-hidden text-ellipsis"
+                    style={{ color: '#1E1C19' }}
                   >
                     {t.title}
                   </h3>

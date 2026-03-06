@@ -24,10 +24,10 @@ export default function ProjectCard({ project, reactions }: ProjectCardProps) {
         <div>
           <PixelBadge variant="accent">{project.tag}</PixelBadge>
           <h3
-            className="font-serif font-normal"
+            className="font-serif font-semibold"
             style={{
               fontSize: 21,
-              color: '#2A2824',
+              color: '#1E1C19',
               lineHeight: 1.25,
               marginTop: 10,
               marginBottom: 10,
@@ -36,7 +36,7 @@ export default function ProjectCard({ project, reactions }: ProjectCardProps) {
           >
             {project.name}
           </h3>
-          <p style={{ fontSize: 15, lineHeight: 1.75, color: '#5A5550', marginBottom: 14, maxWidth: '44ch' }}>
+          <p style={{ fontSize: 16, lineHeight: 1.85, color: '#4A4540', marginBottom: 14, maxWidth: '44ch' }}>
             {project.description}
           </p>
           <div className="flex flex-wrap gap-1.5" style={{ marginBottom: 4 }}>

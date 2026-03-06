@@ -87,8 +87,8 @@ function PhotoBlock({ settings, className, width, aspectRatio, borderRadius }: {
           }}
         />
       ) : (
-        <div className="flex flex-col items-center gap-2 text-center p-5" style={{ color: '#7A7570' }}>
-          <svg width="40" height="40" viewBox="0 0 40 40" fill="none" stroke="#7A7570" strokeWidth="1.2">
+        <div className="flex flex-col items-center gap-2 text-center p-5" style={{ color: '#6B6560' }}>
+          <svg width="40" height="40" viewBox="0 0 40 40" fill="none" stroke="#6B6560" strokeWidth="1.2">
             <circle cx="20" cy="14" r="6" />
             <path d="M8 36 Q8 24 20 24 Q32 24 32 36" />
           </svg>
@@ -107,12 +107,12 @@ export default function Hero({ settings }: HeroProps) {
           {/* On mobile: H1 + small photo side by side */}
           <div className="flex tablet:block items-start gap-4" style={{ marginBottom: 8 }}>
             <h1
-              className="font-serif font-normal flex-1"
+              className="font-serif font-semibold flex-1"
               style={{
-                fontSize: 'clamp(2rem, 4.2vw, 2.7rem)',
-                lineHeight: 1.2,
+                fontSize: 'clamp(2.2rem, 4.5vw, 2.7rem)',
+                lineHeight: 1.15,
                 letterSpacing: '-0.02em',
-                color: '#2A2824',
+                color: '#1E1C19',
               }}
             >
               {renderHeadline(settings.headline)}
@@ -135,7 +135,7 @@ export default function Hero({ settings }: HeroProps) {
 
           <div
             className="flex flex-col gap-3"
-            style={{ fontSize: 16, lineHeight: 1.75, color: '#5A5550', maxWidth: '58ch' }}
+            style={{ fontSize: 16, lineHeight: 1.85, color: '#4A4540', maxWidth: '58ch' }}
           >
             {(settings.bio_paragraphs || []).map((p, i) => (
               <p key={i}>{p}</p>

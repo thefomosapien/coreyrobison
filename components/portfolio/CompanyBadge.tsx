@@ -19,7 +19,7 @@ export default function CompanyBadge({ text, url }: CompanyBadgeProps) {
         background: 'linear-gradient(135deg, rgba(90,138,154,0.25) 0%, rgba(198,140,90,0.2) 50%, rgba(61,110,92,0.2) 100%)',
         color: '#2A6070',
         border: '1px solid rgba(90,138,154,0.3)',
-        letterSpacing: '0.02em',
+        letterSpacing: '0.03em',
       }}
       onMouseEnter={(e) => {
         e.currentTarget.style.background = 'linear-gradient(135deg, rgba(90,138,154,0.35) 0%, rgba(198,140,90,0.28) 50%, rgba(61,110,92,0.28) 100%)';

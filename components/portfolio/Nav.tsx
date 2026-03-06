@@ -45,12 +45,12 @@ export default function Nav({ name, currentPage = 'home' }: NavProps) {
         className="max-w-content mx-auto flex justify-between items-center relative z-10"
         style={{ padding: '24px 24px 16px' }}
       >
-        <a href="/" className="font-serif" style={{ fontSize: 17, color: '#2A2824' }}>
+        <a href="/" className="font-serif font-semibold" style={{ fontSize: 17, color: '#1E1C19' }}>
           {name}
         </a>
 
         {/* Desktop links */}
-        <div className="hidden tablet:flex gap-5 font-pixel" style={{ fontSize: 10, color: '#7A7570' }}>
+        <div className="hidden tablet:flex gap-5 font-pixel" style={{ fontSize: 10, color: '#6B6560', letterSpacing: '0.03em' }}>
           {NAV_LINKS.map(([label, href]) => (
             <a
               key={label}
