@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
+import Image from 'next/image';
 import type { SiteSettings } from '@/lib/types';
 import CompanyBadge from './CompanyBadge';
 
@@ -29,12 +30,13 @@ function renderHeadline(text: string) {
   });
 }
 
-function PhotoBlock({ settings, className, width, aspectRatio, borderRadius }: {
+function PhotoBlock({ settings, className, width, aspectRatio, borderRadius, priority }: {
   settings: SiteSettings;
   className?: string;
   width: number;
   aspectRatio: string;
   borderRadius: number;
+  priority?: boolean;
 }) {
   const [showAlt, setShowAlt] = useState(false);
   const [hinted, setHinted] = useState(false);
@@ -62,6 +64,7 @@ function PhotoBlock({ settings, className, width, aspectRatio, borderRadius }: {
         overflow: 'hidden',
         border: '1px solid rgba(42,40,36,0.06)',
         flexShrink: 0,
+        position: 'relative',
         background: currentUrl
           ? undefined
           : 'linear-gradient(135deg, #D4DFE6 0%, #C8D4DA 100%)',
@@ -74,13 +77,13 @@ function PhotoBlock({ settings, className, width, aspectRatio, borderRadius }: {
       }}
     >
       {currentUrl ? (
-        // eslint-disable-next-line @next/next/no-img-element
-        <img
+        <Image
           src={currentUrl}
           alt={settings.name}
+          fill
+          sizes={`${width}px`}
+          priority={priority}
           style={{
-            width: '100%',
-            height: '100%',
             objectFit: 'cover',
             transition: 'transform 0.2s ease',
             transform: showAlt ? 'scale(1.02)' : 'scale(1)',
@@ -150,6 +153,7 @@ export default function Hero({ settings }: HeroProps) {
           width={200}
           aspectRatio="3/4"
           borderRadius={10}
+          priority
         />
       </div>
     </section>
