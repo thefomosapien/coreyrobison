@@ -19,7 +19,7 @@ async function getData() {
   const supabase = createClient(url, key);
 
   const [{ data: thoughts }, { data: settings }] = await Promise.all([
-    supabase.from('thoughts').select('*').eq('is_published', true).order('created_at', { ascending: false }),
+    supabase.from('thoughts').select('*').eq('is_published', true).order('sort_order'),
     supabase.from('site_settings').select('name').single(),
   ]);
 
