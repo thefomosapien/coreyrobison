@@ -295,7 +295,7 @@ function CustomVisual({ project }: { project: Project }) {
 }
 
 export default function ProjectVisual({ project }: ProjectVisualProps) {
-  // Video media takes priority over hardcoded visual types
+  // Uploaded media takes priority over hardcoded visual types
   if (project.media_type === 'video' && project.video_url) {
     return (
       <div className="w-full h-full overflow-hidden" style={{ borderRadius: 10 }}>
@@ -307,6 +307,14 @@ export default function ProjectVisual({ project }: ProjectVisualProps) {
           muted
           playsInline
         />
+      </div>
+    );
+  }
+  if (project.media_type === 'image' && project.thumbnail_url) {
+    return (
+      <div className="w-full h-full overflow-hidden" style={{ borderRadius: 10 }}>
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img src={project.thumbnail_url} alt={project.name} className="w-full h-full object-cover" />
       </div>
     );
   }
