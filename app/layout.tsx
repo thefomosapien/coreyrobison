@@ -2,9 +2,13 @@ import type { Metadata } from "next";
 import "./globals.css";
 
 export const metadata: Metadata = {
+  metadataBase: new URL("https://coreyrobison.com"),
   title: "Corey Robison — Product Design & Strategy Leader",
   description:
     "Product Design & Strategy Leader with 9 years building brand, product, and design systems for the military community. Now shipping AI-powered products.",
+  twitter: {
+    card: "summary_large_image",
+  },
 };
 
 export default function RootLayout({
