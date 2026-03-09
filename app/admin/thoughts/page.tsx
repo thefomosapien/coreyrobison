@@ -30,6 +30,9 @@ export default function ThoughtsPage() {
   const [saving, setSaving] = useState(false);
   const [dirty, setDirty] = useState(false);
   const [deleteConfirm, setDeleteConfirm] = useState<string | null>(null);
+  const [dragIdx, setDragIdx] = useState<number | null>(null);
+  const [orderDirty, setOrderDirty] = useState(false);
+  const [savingOrder, setSavingOrder] = useState(false);
   const { showToast } = useToast();
 
   useEffect(() => {
@@ -38,11 +41,11 @@ export default function ThoughtsPage() {
 
   useEffect(() => {
     const handleBeforeUnload = (e: BeforeUnloadEvent) => {
-      if (dirty) { e.preventDefault(); e.returnValue = ''; }
+      if (dirty || orderDirty) { e.preventDefault(); e.returnValue = ''; }
     };
     window.addEventListener('beforeunload', handleBeforeUnload);
     return () => window.removeEventListener('beforeunload', handleBeforeUnload);
-  }, [dirty]);
+  }, [dirty, orderDirty]);
 
   async function loadThoughts() {
     const supabase = createClient();
@@ -133,6 +136,43 @@ export default function ThoughtsPage() {
     }
   }
 
+  function handleDragStart(idx: number) {
+    setDragIdx(idx);
+  }
+
+  function handleDragOver(e: React.DragEvent, idx: number) {
+    e.preventDefault();
+    if (dragIdx === null || dragIdx === idx) return;
+    const reordered = [...thoughts];
+    const [moved] = reordered.splice(dragIdx, 1);
+    reordered.splice(idx, 0, moved);
+    setThoughts(reordered);
+    setDragIdx(idx);
+    setOrderDirty(true);
+  }
+
+  function handleDragEnd() {
+    setDragIdx(null);
+  }
+
+  async function saveOrder() {
+    setSavingOrder(true);
+    const supabase = createClient();
+    const updates = thoughts.map((t, i) =>
+      supabase.from('thoughts').update({ sort_order: i + 1 }).eq('id', t.id)
+    );
+    const results = await Promise.all(updates);
+    const failed = results.find((r) => r.error);
+    setSavingOrder(false);
+    if (failed?.error) {
+      showToast(failed.error.message, 'error');
+    } else {
+      showToast('Order saved');
+      setOrderDirty(false);
+      loadThoughts();
+    }
+  }
+
   if (loading) return <div className="text-ink-muted">Loading...</div>;
 
   // Edit/Create form
@@ -184,18 +224,11 @@ export default function ThoughtsPage() {
               required
             />
           </div>
-          <div className="grid grid-cols-2 gap-4">
-            <InputField
-              label="Category"
-              value={editing.category}
-              onChange={(v) => { setEditing({ ...editing, category: v }); setDirty(true); }}
-            />
-            <InputField
-              label="Sort Order"
-              value={String(editing.sort_order)}
-              onChange={(v) => { setEditing({ ...editing, sort_order: parseInt(v) || 0 }); setDirty(true); }}
-            />
-          </div>
+          <InputField
+            label="Category"
+            value={editing.category}
+            onChange={(v) => { setEditing({ ...editing, category: v }); setDirty(true); }}
+          />
           <div>
             <label className="block text-xs font-medium tracking-wider uppercase text-ink-muted mb-1.5">
               Excerpt
@@ -242,24 +275,39 @@ export default function ThoughtsPage() {
       <div className="flex items-center justify-between mb-8">
         <div>
           <h1 className="font-serif text-3xl mb-1">Thoughts</h1>
-          <p className="text-sm text-ink-muted">{thoughts.length} thoughts</p>
+          <p className="text-sm text-ink-muted">{thoughts.length} thoughts · drag to reorder</p>
         </div>
-        <button
-          onClick={startNew}
-          className="px-5 py-2 rounded-lg bg-ink text-white text-sm font-medium hover:bg-ink/90 transition"
-        >
-          + Add Thought
-        </button>
+        <div className="flex gap-3">
+          {orderDirty && (
+            <button
+              onClick={saveOrder}
+              disabled={savingOrder}
+              className="px-5 py-2 rounded-lg bg-ocean text-white text-sm font-medium hover:bg-ocean/90 transition disabled:opacity-50"
+            >
+              {savingOrder ? 'Saving...' : 'Save Order'}
+            </button>
+          )}
+          <button
+            onClick={startNew}
+            className="px-5 py-2 rounded-lg bg-ink text-white text-sm font-medium hover:bg-ink/90 transition"
+          >
+            + Add Thought
+          </button>
+        </div>
       </div>
 
       <div className="bg-white rounded-xl border border-ink/[0.06] overflow-hidden">
-        {thoughts.map((thought) => (
+        {thoughts.map((thought, idx) => (
           <div
             key={thought.id}
-            className="flex items-center justify-between px-5 py-4 border-b border-ink/[0.04] last:border-b-0 hover:bg-bg/50 transition"
+            draggable
+            onDragStart={() => handleDragStart(idx)}
+            onDragOver={(e) => handleDragOver(e, idx)}
+            onDragEnd={handleDragEnd}
+            className={`flex items-center justify-between px-5 py-4 border-b border-ink/[0.04] last:border-b-0 hover:bg-bg/50 transition ${dragIdx === idx ? 'opacity-50 bg-ocean/5' : ''}`}
           >
             <div className="flex items-center gap-4 flex-1 min-w-0">
-              <span className="text-sm text-ink-muted w-6 text-center">{thought.sort_order}</span>
+              <span className="cursor-grab active:cursor-grabbing text-ink-muted select-none" title="Drag to reorder">⠿</span>
               <div className="min-w-0">
                 <div className="font-medium text-sm truncate">{thought.title}</div>
                 <div className="text-xs text-ink-muted truncate">{thought.category}</div>

@@ -26,7 +26,7 @@ async function getData() {
     const [settingsRes, projectsRes, thoughtsRes, reactionsRes, journeyRes, aboutRes] = await Promise.all([
       supabase.from('site_settings').select('*').single(),
       supabase.from('projects').select('*').eq('is_visible', true).order('sort_order'),
-      supabase.from('thoughts').select('*').eq('is_published', true).order('created_at', { ascending: false }).limit(4),
+      supabase.from('thoughts').select('*').eq('is_published', true).order('sort_order').limit(4),
       supabase.from('reactions').select('*'),
       supabase.from('journey_items').select('*').eq('is_visible', true).order('sort_order'),
       supabase.from('about_details').select('*').order('sort_order'),

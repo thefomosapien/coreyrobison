@@ -27,7 +27,7 @@ async function getThought(slug: string) {
 
   const [{ data: reactionRows }, { data: relatedRows }] = await Promise.all([
     supabase.from('reactions').select('reaction_type, count').eq('target_type', 'thought').eq('target_id', thought.id),
-    supabase.from('thoughts').select('slug, title, category').eq('is_published', true).neq('slug', slug).order('created_at', { ascending: false }).limit(3),
+    supabase.from('thoughts').select('slug, title, category').eq('is_published', true).neq('slug', slug).order('sort_order').limit(3),
   ]);
 
   const reactions: Record<string, number> = {};
