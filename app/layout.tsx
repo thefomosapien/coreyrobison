@@ -6,8 +6,22 @@ export const metadata: Metadata = {
   title: "Corey Robison — Product Design & Strategy Leader",
   description:
     "Product Design & Strategy Leader with 9 years building brand, product, and design systems for the military community. Now shipping AI-powered products.",
+  openGraph: {
+    images: [
+      {
+        url: "/og.jpg",
+        width: 1200,
+        height: 630,
+        alt: "Corey Robison — Product Design & Strategy Leader",
+      },
+    ],
+  },
   twitter: {
     card: "summary_large_image",
+    images: ["/og.jpg"],
+  },
+  icons: {
+    icon: "/favicon.jpg",
   },
 };
 
