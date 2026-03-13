@@ -49,8 +49,6 @@ export default function ProjectsDashboard({
       color_hex: (fd.get('color_hex') as string) || null,
       supabase_account_email: (fd.get('supabase_account_email') as string) || null,
       supabase_project_url: (fd.get('supabase_project_url') as string) || null,
-      supabase_anon_key: (fd.get('supabase_anon_key') as string) || null,
-      supabase_service_key: (fd.get('supabase_service_key') as string) || null,
       notes: (fd.get('notes') as string) || null,
       sort_order: parseInt(fd.get('sort_order') as string) || 0,
     });
@@ -198,10 +196,6 @@ function AddForm({ onSubmit, isPending }: { onSubmit: (e: React.FormEvent<HTMLFo
         </div>
         <FormField label="Supabase Account Email" name="supabase_account_email" />
         <FormField label="Supabase Project URL" name="supabase_project_url" />
-        <div className="grid grid-cols-2 gap-3">
-          <FormField label="Anon Key" name="supabase_anon_key" />
-          <FormField label="Service Key" name="supabase_service_key" />
-        </div>
         <div>
           <label className="block font-pixel text-[8px] uppercase tracking-wider text-ink-faint mb-1">
             Notes
