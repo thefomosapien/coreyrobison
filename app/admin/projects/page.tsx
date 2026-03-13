@@ -228,10 +228,9 @@ export default function ProjectsPage() {
               className="w-full px-3 py-2 rounded-lg border border-ink/10 bg-bg text-sm focus:outline-none focus:ring-2 focus:ring-accent/30 focus:border-accent transition resize-y"
             />
           </div>
-          <InputField
-            label="Skills (comma separated)"
-            value={editing.skills.join(', ')}
-            onChange={(v) => { setEditing({ ...editing, skills: v.split(',').map((s) => s.trim()).filter(Boolean) }); setDirty(true); }}
+          <SkillsInput
+            value={editing.skills}
+            onChange={(skills) => { setEditing({ ...editing, skills }); setDirty(true); }}
           />
           <div className="grid grid-cols-2 gap-4">
             <InputField label="External URL" value={editing.external_url || ''} onChange={(v) => { setEditing({ ...editing, external_url: v || null }); setDirty(true); }} />
@@ -461,6 +460,30 @@ export default function ProjectsPage() {
           <div className="p-8 text-center text-ink-muted text-sm">No projects yet. Add your first one.</div>
         )}
       </div>
+    </div>
+  );
+}
+
+function SkillsInput({ value, onChange }: { value: string[]; onChange: (skills: string[]) => void }) {
+  const [raw, setRaw] = useState(value.join(', '));
+
+  // Sync raw string when the parent resets the editing state (e.g. selecting a different project)
+  useEffect(() => {
+    setRaw(value.join(', '));
+  }, [value.join(',')]);
+
+  return (
+    <div>
+      <label className="block text-xs font-medium tracking-wider uppercase text-ink-muted mb-1.5">
+        Skills (comma separated)
+      </label>
+      <input
+        type="text"
+        value={raw}
+        onChange={(e) => setRaw(e.target.value)}
+        onBlur={() => onChange(raw.split(',').map((s) => s.trim()).filter(Boolean))}
+        className="w-full px-3 py-2 rounded-lg border border-ink/10 bg-bg text-sm focus:outline-none focus:ring-2 focus:ring-accent/30 focus:border-accent transition"
+      />
     </div>
   );
 }
