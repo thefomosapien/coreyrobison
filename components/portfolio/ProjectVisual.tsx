@@ -1,4 +1,5 @@
 import type { Project } from '@/lib/types';
+import ImageCarousel from './ImageCarousel';
 
 interface ProjectVisualProps {
   project: Project;
@@ -276,11 +277,15 @@ function CustomVisual({ project }: { project: Project }) {
       </div>
     );
   }
-  if (project.thumbnail_url) {
+  const images = project.image_urls?.length ? project.image_urls : project.thumbnail_url ? [project.thumbnail_url] : [];
+  if (images.length > 1) {
+    return <ImageCarousel images={images} alt={project.name} />;
+  }
+  if (images.length === 1) {
     return (
       <div className="w-full h-full overflow-hidden" style={{ borderRadius: 10 }}>
         {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img src={project.thumbnail_url} alt={project.name} className="w-full h-full object-cover" />
+        <img src={images[0]} alt={project.name} className="w-full h-full object-cover" />
       </div>
     );
   }
@@ -310,13 +315,19 @@ export default function ProjectVisual({ project }: ProjectVisualProps) {
       </div>
     );
   }
-  if (project.media_type === 'image' && project.thumbnail_url) {
-    return (
-      <div className="w-full h-full overflow-hidden" style={{ borderRadius: 10 }}>
-        {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img src={project.thumbnail_url} alt={project.name} className="w-full h-full object-cover" />
-      </div>
-    );
+  if (project.media_type === 'image') {
+    const images = project.image_urls?.length ? project.image_urls : project.thumbnail_url ? [project.thumbnail_url] : [];
+    if (images.length > 1) {
+      return <ImageCarousel images={images} alt={project.name} />;
+    }
+    if (images.length === 1) {
+      return (
+        <div className="w-full h-full overflow-hidden" style={{ borderRadius: 10 }}>
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img src={images[0]} alt={project.name} className="w-full h-full object-cover" />
+        </div>
+      );
+    }
   }
 
   const map: Record<string, JSX.Element> = {
