@@ -15,6 +15,7 @@ const emptyProject: Omit<Project, 'id' | 'created_at' | 'updated_at'> = {
   visual_type: 'custom',
   visual_bg_color: null,
   thumbnail_url: null,
+  image_urls: [],
   video_url: null,
   media_type: 'image',
   sort_order: 0,
@@ -77,6 +78,7 @@ export default function ProjectsPage() {
     setSaving(true);
     const supabase = createClient();
 
+    const imageUrls = editing.image_urls?.length ? editing.image_urls : [];
     const payload = {
       slug: editing.slug,
       tag: editing.tag,
@@ -86,7 +88,8 @@ export default function ProjectsPage() {
       external_url: editing.external_url || null,
       visual_type: editing.visual_type,
       visual_bg_color: editing.visual_bg_color || null,
-      thumbnail_url: editing.thumbnail_url || null,
+      thumbnail_url: imageUrls[0] || editing.thumbnail_url || null,
+      image_urls: imageUrls,
       video_url: editing.video_url || null,
       media_type: editing.media_type,
       sort_order: editing.sort_order,
@@ -140,25 +143,45 @@ export default function ProjectsPage() {
 
   async function handleMediaUpload(e: React.ChangeEvent<HTMLInputElement>, type: 'image' | 'video') {
     if (!e.target.files?.length || !editing) return;
-    const file = e.target.files[0];
     const supabase = createClient();
-    const ext = file.name.split('.').pop();
-    const path = `${editing.slug || 'project'}-${Date.now()}.${ext}`;
 
-    const { error } = await supabase.storage.from('project-images').upload(path, file);
-    if (error) {
-      showToast('Upload failed: ' + error.message, 'error');
-      return;
-    }
-
-    const { data: urlData } = supabase.storage.from('project-images').getPublicUrl(path);
     if (type === 'video') {
+      const file = e.target.files[0];
+      const ext = file.name.split('.').pop();
+      const path = `${editing.slug || 'project'}-${Date.now()}.${ext}`;
+      const { error } = await supabase.storage.from('project-images').upload(path, file);
+      if (error) { showToast('Upload failed: ' + error.message, 'error'); return; }
+      const { data: urlData } = supabase.storage.from('project-images').getPublicUrl(path);
       setEditing({ ...editing, video_url: urlData.publicUrl, media_type: 'video' });
+      setDirty(true);
+      showToast('Video uploaded');
     } else {
-      setEditing({ ...editing, thumbnail_url: urlData.publicUrl, media_type: 'image' });
+      const files = Array.from(e.target.files);
+      const uploadedUrls: string[] = [];
+      for (const file of files) {
+        const ext = file.name.split('.').pop();
+        const path = `${editing.slug || 'project'}-${Date.now()}-${Math.random().toString(36).slice(2, 7)}.${ext}`;
+        const { error } = await supabase.storage.from('project-images').upload(path, file);
+        if (error) { showToast('Upload failed: ' + error.message, 'error'); continue; }
+        const { data: urlData } = supabase.storage.from('project-images').getPublicUrl(path);
+        uploadedUrls.push(urlData.publicUrl);
+      }
+      if (uploadedUrls.length > 0) {
+        const existing = editing.image_urls || [];
+        setEditing({ ...editing, image_urls: [...existing, ...uploadedUrls], media_type: 'image' });
+        setDirty(true);
+        showToast(`${uploadedUrls.length} image${uploadedUrls.length > 1 ? 's' : ''} uploaded`);
+      }
     }
+    // Reset file input
+    e.target.value = '';
+  }
+
+  function handleRemoveImage(index: number) {
+    if (!editing) return;
+    const updated = (editing.image_urls || []).filter((_, i) => i !== index);
+    setEditing({ ...editing, image_urls: updated });
     setDirty(true);
-    showToast(`${type === 'video' ? 'Video' : 'Image'} uploaded`);
   }
 
   if (loading) return <div className="text-ink-muted">Loading...</div>;
@@ -264,21 +287,59 @@ export default function ProjectsPage() {
             {editing.media_type === 'image' && (
               <div>
                 <label className="block text-xs font-medium tracking-wider uppercase text-ink-muted mb-1.5">
-                  Thumbnail Image
+                  Images {(editing.image_urls?.length ?? 0) > 1 ? <span className="normal-case font-normal text-ink-muted/70">— carousel when multiple</span> : ''}
                 </label>
-                <input type="file" accept="image/*" onChange={(e) => handleMediaUpload(e, 'image')} className="text-sm" />
-                {editing.thumbnail_url && (
-                  <div className="mt-2 relative inline-block">
-                    {/* eslint-disable-next-line @next/next/no-img-element */}
-                    <img src={editing.thumbnail_url} alt="Preview" className="h-24 rounded-lg object-cover" />
-                    <button
-                      type="button"
-                      onClick={() => { setEditing({ ...editing, thumbnail_url: null }); setDirty(true); }}
-                      className="absolute -top-2 -right-2 w-5 h-5 rounded-full bg-red-500 text-white text-xs flex items-center justify-center hover:bg-red-600"
-                    >
-                      x
-                    </button>
+                <input
+                  type="file"
+                  accept="image/*"
+                  multiple
+                  onChange={(e) => handleMediaUpload(e, 'image')}
+                  className="text-sm"
+                />
+                {/* Legacy thumbnail fallback (shown if no image_urls yet) */}
+                {(!editing.image_urls?.length && editing.thumbnail_url) && (
+                  <div className="mt-3">
+                    <p className="text-xs text-ink-muted mb-1.5">Current image (legacy)</p>
+                    <div className="relative inline-block">
+                      {/* eslint-disable-next-line @next/next/no-img-element */}
+                      <img src={editing.thumbnail_url} alt="Preview" className="h-24 rounded-lg object-cover" />
+                      <button
+                        type="button"
+                        onClick={() => { setEditing({ ...editing, thumbnail_url: null }); setDirty(true); }}
+                        className="absolute -top-2 -right-2 w-5 h-5 rounded-full bg-red-500 text-white text-xs flex items-center justify-center hover:bg-red-600"
+                      >
+                        ×
+                      </button>
+                    </div>
                   </div>
+                )}
+                {/* Multi-image grid */}
+                {!!editing.image_urls?.length && (
+                  <div className="mt-3 flex flex-wrap gap-2">
+                    {editing.image_urls.map((url, i) => (
+                      <div key={i} className="relative group/img">
+                        {/* eslint-disable-next-line @next/next/no-img-element */}
+                        <img src={url} alt={`Image ${i + 1}`} className="h-24 w-24 rounded-lg object-cover" />
+                        {i === 0 && (
+                          <span className="absolute bottom-1 left-1 text-[10px] bg-black/50 text-white rounded px-1 py-0.5 leading-none">
+                            1st
+                          </span>
+                        )}
+                        <button
+                          type="button"
+                          onClick={() => handleRemoveImage(i)}
+                          className="absolute -top-2 -right-2 w-5 h-5 rounded-full bg-red-500 text-white text-xs flex items-center justify-center hover:bg-red-600"
+                        >
+                          ×
+                        </button>
+                      </div>
+                    ))}
+                  </div>
+                )}
+                {(editing.image_urls?.length ?? 0) > 1 && (
+                  <p className="mt-1.5 text-xs text-ink-muted">
+                    {editing.image_urls!.length} images — will display as a carousel. Drag to reorder is not supported; remove and re-upload to change order.
+                  </p>
                 )}
               </div>
             )}
